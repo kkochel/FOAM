@@ -3,6 +3,7 @@ package pl.lodz.uni.biobank.foam.app.cega_user;
 import org.springframework.stereotype.Service;
 import pl.lodz.uni.biobank.foam.app.sda.api.CegaUserMessage;
 
+import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -31,5 +32,9 @@ public class CegaUserService {
         cu.setKeys(keys);
 
         cegaUserRepository.save(cu);
+    }
+
+    public List<String> getUsers() {
+        return cegaUserRepository.findAll().stream().map(CegaUser::getFullName).toList();
     }
 }
