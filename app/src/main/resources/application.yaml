@@ -24,8 +24,7 @@ spring:
 
   liquibase:
     change-log: classpath:db/changelog/db.changelog-master.yaml
-server:
-  servlet:
-    context-path: /api
 
+foam:
+  allowed-origins: ${ALLOWED_ORIGINS:http://localhost:5173/}
 

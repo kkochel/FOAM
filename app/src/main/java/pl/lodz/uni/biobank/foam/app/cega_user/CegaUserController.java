@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("cega-users")
+@RequestMapping("api/cega-users")
 public class CegaUserController {
     private final CegaUserService service;
 
