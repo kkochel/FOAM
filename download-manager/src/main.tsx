@@ -12,6 +12,7 @@ import {ReactQueryDevtools} from "@tanstack/react-query-devtools";
 
 const axiosConfiguration = {withCredentials: true}
 export const axiosClient = axios.create(axiosConfiguration)
+import 'bootstrap/dist/css/bootstrap.css';
 
 const queryClient = new QueryClient({
     defaultOptions: {
