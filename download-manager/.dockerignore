@@ -1,0 +1,5 @@
+./dist
+./node_modules
+download-manager.iml
+README.md
+Dockerfile
