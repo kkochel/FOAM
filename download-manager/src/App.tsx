@@ -5,7 +5,7 @@ import {Home} from "./home/Home.tsx";
 function App() {
 
     return (
-        <Container style={{"background": "aqua"}}>
+        <Container fluid className={"h-100"}>
             <Home/>
         </Container>
     )

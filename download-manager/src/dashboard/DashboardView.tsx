@@ -1,29 +1,74 @@
-import {useQuery} from "@tanstack/react-query";
-import {fetchData} from "../common/network.ts";
-import {AppSettings} from "../api/AppSettings.ts";
-import {ListGroup} from "react-bootstrap";
+import {DatasetItem} from "./DatasetItem.tsx";
+import {useParams} from "react-router-dom";
+import {useEffect, useState} from "react";
+
+
+export interface DatasetFile {
+    egafId: string,
+    history: string[]
+    canExport: boolean
+}
+
+export interface Dataset {
+    egadId: string,
+    canExport: boolean,
+    files: DatasetFile[]
+}
+
+const fooDatasets: Dataset[] = [
+    {
+        egadId: "EGAD010000051", canExport: true, files: [{
+            egafId: "EGAF000001",
+            history: ["Start reencryption", "Reenceryption finished"],
+            canExport: false
+        },
+            {
+                egafId: "EGAF000002",
+                history: ["Start reencryption", "Reenceryption finished", "File deleted in outbox"],
+                canExport: true
+
+            }
+        ]
+    },
+    {
+        egadId: "EGAD020000051", canExport: true, files: [{
+            egafId: "EGAF000011",
+            history: ["Start reencryption", "Reenceryption finished"],
+            canExport: false
+        },
+            {
+                egafId: "EGAF000033",
+                history: ["Start reencryption", "Reenceryption finished", "File deleted in outbox"],
+                canExport: true
+            }
+        ]
+    }
+]
+
+type UrlParams = {
+    datasetId: string
+}
 
 export const DashboardView = () => {
+    const {datasetId} = useParams<UrlParams>();
+    const [dataset, setDataset] = useState<Dataset>()
 
+    useEffect(() => {
+        const selectedValue: Dataset | undefined = fooDatasets.filter(d => d.egadId === datasetId).pop()
+        if (selectedValue) {
+            setDataset(selectedValue)
+        }
 
+    }, [datasetId])
 
-    const { data} = useQuery<string[]>({
-        queryKey: ["users", AppSettings.API_ENDPOINT],
-        queryFn: () => fetchData<string[]>(AppSettings.API_ENDPOINT),
-    });
+    // const {data} = useQuery<string[]>({
+    //     queryKey: ["users", AppSettings.API_ENDPOINT],
+    //     queryFn: () => fetchData<string[]>(AppSettings.API_ENDPOINT),
+    // });
 
-  return(
-      <>
-          {data ?
-         <ListGroup>
-             {data.map((value, index)=>
-                <ListGroup.Item key={index}>{value}</ListGroup.Item>
-             )}
-         </ListGroup>
-
-              :
-              <div>There is no data to display</div>
-          }
-      </>
-  )
+    return (
+        <>
+            {dataset ? <DatasetItem dataset={dataset}/> : <div>There is no data to display</div>}
+        </>
+    )
 }
