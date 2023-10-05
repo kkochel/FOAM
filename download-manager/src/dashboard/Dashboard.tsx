@@ -8,12 +8,12 @@ export const Dashboard = () => {
             <Header isAuthenticated={true}/>
             <Row className={"h-100"}>
                 <Col xs={3}>
-                    <aside className={"h-100"}>
-                        <h4>List of datasets</h4>
+                    <aside className={"h-100 border-with-shadow"}>
+                        <h4 className={"mt-2"}>List of datasets</h4>
                         <Form style={{"paddingLeft": "2rem", "paddingRight": "2rem"}}>
                             <Form.Group style={{"textAlign": "left"}}>
                                 <Form.Label htmlFor={"dataset-search"}>Search dataset</Form.Label>
-                                <Form.Control id={"dataset-search"} type={"text"} placeholder={"Filter by dataset id"}/>
+                                <Form.Control className={"border-black border-2"} id={"dataset-search"} type={"text"} placeholder={"Filter by dataset id"}/>
                             </Form.Group>
                         </Form>
                         <Nav className={"flex-column"}>

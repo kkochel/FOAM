@@ -11,8 +11,8 @@ export const Header: FC<Props> = (props) => {
     const {isAuthenticated} = props
 
     return (
-        <>
-            <Navbar >
+        <div id={"header"}>
+            <Navbar>
                 <Navbar.Brand href="https://ega-archive.org/federated">
                     <img src={fegaLogo}
                          width={"300px"}
@@ -26,7 +26,14 @@ export const Header: FC<Props> = (props) => {
                         <Navbar.Text>
                             Signed in as: Mark Otto
                         </Navbar.Text>
+                        <Link to={"/"}>
+                            <Button className={"ms-4"}>
+                                Sign out
+                            </Button>
+                        </Link>
+
                     </Navbar.Collapse>
+
                     :
                     <Navbar.Collapse className="justify-content-end">
                         <Link to={"/sing-in"}>
@@ -34,7 +41,7 @@ export const Header: FC<Props> = (props) => {
                     </Navbar.Collapse>
                 }
             </Navbar>
-        </>
+        </div>
     )
 
 }

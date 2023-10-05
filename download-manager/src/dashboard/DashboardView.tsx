@@ -31,7 +31,7 @@ const fooDatasets: Dataset[] = [
         ]
     },
     {
-        egadId: "EGAD020000051", canExport: true, files: [{
+        egadId: "EGAD020000051", canExport: false, files: [{
             egafId: "EGAF000011",
             history: ["Start reencryption", "Reenceryption finished"],
             canExport: false
@@ -39,7 +39,7 @@ const fooDatasets: Dataset[] = [
             {
                 egafId: "EGAF000033",
                 history: ["Start reencryption", "Reenceryption finished", "File deleted in outbox"],
-                canExport: true
+                canExport: false
             }
         ]
     }

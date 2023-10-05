@@ -15,7 +15,7 @@ export const SignInForm = () => {
         <Container>
             <Row>
                 <Col xs={4}/>
-                <Col className={"border border-2 border-light rounded shadow"}>
+                <Col className={"border-with-shadow"}>
                     <Form onSubmit={e => e.preventDefault()}>
                         <Form.Group>
                             <Form.Label className={"fw-bold align-content-start"}>Username</Form.Label>
