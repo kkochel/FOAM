@@ -15,7 +15,7 @@ public class SdaListener {
         this.handlerService = handlerService;
     }
 
-    @RabbitListener(queues = "sda_unknown_schema", errorHandler = "sdaListenerErrorHandler")
+    @RabbitListener(queues = "unknown_schema", errorHandler = "sdaListenerErrorHandler")
     public void receiveMessage(String message) throws ParseException, JsonProcessingException {
         handlerService.handle(message);
     }

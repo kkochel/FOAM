@@ -14,7 +14,7 @@ public class CegaUser {
 
     @Id
     @GeneratedValue(strategy = SEQUENCE, generator = "cega_user_generator")
-    @SequenceGenerator(name = "cega_user_generator", sequenceName = "cega_user_seq", schema = "cega_user")
+    @SequenceGenerator(name = "cega_user_generator", sequenceName = "cega_user_seq", schema = "cega_user", allocationSize = 1)
     private Long id;
 
     @Column(name = "email")
