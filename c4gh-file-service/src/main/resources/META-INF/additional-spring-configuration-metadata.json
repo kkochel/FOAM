@@ -1,0 +1,63 @@
+{
+  "properties": [
+    {
+      "name": "archive.type",
+      "type": "java.lang.String",
+      "description": "Type of outbox"
+    },
+    {
+      "name": "archive.path",
+      "type": "java.lang.String",
+      "description": "Path to posix or s3 bucket"
+    },
+    {
+      "name": "archive.s3.endpoint",
+      "type": "java.lang.String",
+      "description": "S3 service endpoint"
+    },
+    {
+      "name": "archive.s3.accessKey",
+      "type": "java.lang.String",
+      "description": "S3 accessKey"
+    },
+    {
+      "name": "archive.s3.secretKey",
+      "type": "java.lang.String",
+      "description": "S3 secretKey"
+    },
+    {
+      "name": "outbox.type",
+      "type": "java.lang.String",
+      "description": "Type of outbox"
+    },
+    {
+      "name": "outbox.path",
+      "type": "java.lang.String",
+      "description": "Path to posix "
+    }
+  ],
+  "hints": [
+    {
+      "name": "outbox.type",
+      "values": [
+        {
+          "value": "posix",
+          "description": "Posix file system"
+        }
+      ]
+    },
+    {
+      "name": "archive.type",
+      "values": [
+        {
+          "value": "posix",
+          "description": "Posix file system"
+        },
+        {
+          "value": "s3",
+          "description": "S3 like file storage"
+        }
+      ]
+    }
+  ]
+}
