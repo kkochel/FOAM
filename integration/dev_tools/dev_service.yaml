@@ -1,0 +1,72 @@
+version: "3.9"
+services:
+
+  "broker-sda-int":
+    image: "ghcr.io/kkochel/sensitive-data-archive:v0.0.6-rabbitmq"
+    container_name: "broker-sda-int"
+    restart: "no"
+    environment:
+      RABBITMQ_SERVER_CERT: /opt/certs/mq/mq.crt
+      RABBITMQ_SERVER_KEY: /opt/certs/mq/mq.key
+      RABBITMQ_SERVER_CACERT: /opt/certs/mq/ca.crt
+      RABBITMQ_SERVER_VERIFY: "verify_none"
+    volumes:
+      - /opt/certs/ca.crt:/opt/certs/mq/ca.crt
+      - /opt/certs/mq.crt:/opt/certs/mq/mq.crt
+      - /opt/certs/mq.key:/opt/certs/mq/mq.key
+    networks:
+      foam_net_int:
+        ipv4_address: 172.16.239.4
+
+  sda-db-int:
+    image: "ghcr.io/kkochel/sensitive-data-archive:v0.0.7-postgres"
+    container_name: "sda-db-int"
+    restart: "no"
+    environment:
+      POSTGRES_PASSWORD: biobank
+      POSTGRES_SERVER_CERT: /opt/certs/db/db.crt
+      POSTGRES_SERVER_KEY: /opt/certs/db/db.key
+      POSTGRES_SERVER_CACERT: /opt/certs/db/ca.crt
+    volumes:
+      - /opt/certs/ca.crt:/opt/certs/db/ca.crt
+      - /opt/certs/db.crt:/opt/certs/db/db.crt
+      - /opt/certs/db.key:/opt/certs/db/db.key
+      - /opt/foam/db-int:/var/lib/postgresql/data
+    networks:
+      foam_net_int:
+        ipv4_address: 172.16.239.2
+
+  foam-int:
+    image: "foam:0.0.2-int"
+    container_name: "foam-int"
+    restart: "no"
+    depends_on:
+      - sda-db-int
+      - broker-sda-int
+    environment:
+      POSTGRES_PASSWORD: biobank
+      POSTGRES_USERNAME: postgres
+      BROKER_HOST: 172.16.239.4
+      BROKER_PORT: 5671
+      BROKER_USERNAME: guest
+      BROKER_PASSWORD: guest
+      BROKER_VHOST: sda
+      BROKER_SSL: "true"
+      KEYSTORE_PATH: /etc/ssl/certs/java/keystore.p12
+    volumes:
+      - /opt/certs/ca.crt:/usr/local/share/ca-certificates/ca.crt
+      - /opt/certs/ca.crt:/opt/certs/ca.crt
+      - /opt/certs/client/client.crt:/opt/certs/client/client.crt
+      - /opt/certs/client/client.pk8:/opt/certs/client/client.pk8
+      - /opt/certs/client/keystore.p12:/etc/ssl/certs/java/keystore.p12
+      - /opt/certs/client/cacerts:/etc/ssl/certs/java/cacerts
+    networks:
+      foam_net_int:
+        ipv4_address: 172.16.239.6
+
+networks:
+  foam_net_int:
+    ipam:
+      driver: default
+      config:
+        - subnet: 172.16.239.0/24
