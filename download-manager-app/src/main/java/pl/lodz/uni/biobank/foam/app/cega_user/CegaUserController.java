@@ -1,11 +1,10 @@
 package pl.lodz.uni.biobank.foam.app.cega_user;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("api/cega-users")
@@ -17,11 +16,10 @@ public class CegaUserController {
     }
 
 
-    @GetMapping
-    ResponseEntity<List<String>> getUsers() {
-        List<String> users = service.getUsers();
-
-        return ResponseEntity.ok(users);
+    @GetMapping("full-name")
+    ResponseEntity<HeaderResponse> getFullUsername(Authentication authentication) {
+        HeaderResponse response = new HeaderResponse(service.getUserFullName((String) authentication.getPrincipal()));
+        return ResponseEntity.ok(response);
     }
 
 }

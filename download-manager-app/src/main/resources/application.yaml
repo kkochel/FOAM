@@ -21,10 +21,17 @@ spring:
     url: ${DB_URL:jdbc:postgresql://172.16.232.2:5432/foam}
     password: ${DB_PASSWORD:biobank}
     username: ${DB_USERNAME:biobank}
-
   liquibase:
     change-log: classpath:db/changelog/db.changelog-master.yaml
 
-foam:
+application:
   allowed-origins: ${ALLOWED_ORIGINS:http://localhost:5173/}
-
+  jwt:
+    secret-key: 12341234123412341234123412341234123412341234123412341234123412341234123412341234123412341234123412341234
+    expiration: 360000 # an hour in milliseconds
+    refresh-token:
+      expiration: 8640000 # a day in milliseconds
+logging:
+  level:
+    org.springframework.security: error
+    org.springframework.web: error
