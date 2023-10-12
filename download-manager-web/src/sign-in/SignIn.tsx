@@ -5,7 +5,7 @@ import {Container} from "react-bootstrap";
 export const SignIn = () => {
     return (
         <Container fluid className={"h-100"}>
-            <Header isAuthenticated={false}/>
+            <Header/>
             <SignInForm/>
         </Container>
     )

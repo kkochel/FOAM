@@ -5,7 +5,7 @@ import {Link, Outlet} from "react-router-dom";
 export const Dashboard = () => {
     return (
         <Container fluid className={"h-100"}>
-            <Header isAuthenticated={true}/>
+            <Header/>
             <Row className={"h-100"}>
                 <Col xs={3}>
                     <aside className={"h-100 border-with-shadow"}>
@@ -13,7 +13,8 @@ export const Dashboard = () => {
                         <Form style={{"paddingLeft": "2rem", "paddingRight": "2rem"}}>
                             <Form.Group style={{"textAlign": "left"}}>
                                 <Form.Label htmlFor={"dataset-search"}>Search dataset</Form.Label>
-                                <Form.Control className={"border-black border-2"} id={"dataset-search"} type={"text"} placeholder={"Filter by dataset id"}/>
+                                <Form.Control className={"border-black border-2"} id={"dataset-search"} type={"text"}
+                                              placeholder={"Filter by dataset id"}/>
                             </Form.Group>
                         </Form>
                         <Nav className={"flex-column"}>

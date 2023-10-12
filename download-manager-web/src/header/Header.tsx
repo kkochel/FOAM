@@ -1,14 +1,28 @@
 import {Button, Navbar} from "react-bootstrap";
 import fegaLogo from '../assets/FEGA-logo-generic.svg'
-import {FC} from "react";
-import {Link} from "react-router-dom";
+import {FC, useContext, useEffect, useState} from "react";
+import {Link, useNavigate} from "react-router-dom";
+import {AuthContext} from "../auth/AuthProvider.tsx";
+import {fetchData} from "../common/consts.ts";
 
-interface Props {
-    isAuthenticated: boolean
+interface HeaderResponse {
+    fullName: string
 }
 
-export const Header: FC<Props> = (props) => {
-    const {isAuthenticated} = props
+
+export const Header: FC = () => {
+    const {token, handleSignOut, setToken} = useContext(AuthContext)
+    const [fullName, setFullName] = useState<string>()
+    const isAuthenticated = token !== null
+    const navigate = useNavigate()
+
+    useEffect(() => {
+        if (isAuthenticated) {
+            fetchData<HeaderResponse>("http://localhost:8080/api/cega-users/full-name")
+                .then(response => setFullName(response.fullName))
+
+        }
+    }, [isAuthenticated]);
 
     return (
         <div id={"header"}>
@@ -24,14 +38,9 @@ export const Header: FC<Props> = (props) => {
                 {isAuthenticated ?
                     <Navbar.Collapse className="justify-content-end">
                         <Navbar.Text>
-                            Signed in as: Mark Otto
+                            Signed in as: {fullName}
                         </Navbar.Text>
-                        <Link to={"/"}>
-                            <Button className={"ms-4"}>
-                                Sign out
-                            </Button>
-                        </Link>
-
+                        <Button className={"ms-4"} onClick={() => handleSignOut(setToken, navigate)}>Sign out</Button>
                     </Navbar.Collapse>
 
                     :

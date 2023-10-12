@@ -4,7 +4,7 @@ import {HomeContent} from "./HomeContent.tsx";
 export const Home = () => {
     return (
         <>
-            <Header isAuthenticated={false}/>
+            <Header/>
             <HomeContent/>
         </>
     )
