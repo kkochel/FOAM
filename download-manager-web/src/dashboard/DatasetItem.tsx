@@ -4,6 +4,7 @@ import {Accordion, Button, Container} from "react-bootstrap";
 import {DatasetFileItem} from "./DatasetFileItem.tsx";
 import {ConfirmationDialog} from "../common/ConfirmationDialog.tsx";
 import {SuccessNotification} from "../common/SuccessNotification.tsx";
+import {disableExportButton} from "../common/consts.ts";
 
 interface Props {
     dataset: Dataset
@@ -23,17 +24,20 @@ export const DatasetItem: FC<Props> = (props) => {
 
     return (
         <Container className={"border-with-shadow"}>
-            <h4 className={"mt-2"}>{dataset.egadId}</h4>
+            <h4 className={"mt-2"}>{dataset.stableId}</h4>
             <Accordion>
                 {dataset.files.map((value, index) => {
-                    return <DatasetFileItem key={index} eventKeyId={index.toString()} datasetFile={value}/>
-                })}
+                    return <DatasetFileItem key={index}
+                                            eventKeyId={index.toString()}
+                                            datasetFile={value}
+                                            datasetStatus={dataset.status}
+                                            datasetId={dataset.stableId}/>})}
 
             </Accordion>
 
-            <Button disabled={!dataset.canExport}
-                    onClick={() => setConfirmationDialog(true)}
-                    className={"m-3"}>Export all files to outbox</Button>
+            <Button onClick={() => setConfirmationDialog(true)}
+                    className={"m-3"}
+                    disabled={disableExportButton(dataset.status)}>Export all files to outbox</Button>
             <ConfirmationDialog showConfirmation={confirmationDialog}
                                 onHideConfirmation={setConfirmationDialog}
                                 action={handleExportAllFiles}

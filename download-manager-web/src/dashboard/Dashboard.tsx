@@ -1,8 +1,25 @@
 import {Header} from "../header/Header.tsx";
 import {Col, Container, Form, Nav, Row} from "react-bootstrap";
 import {Link, Outlet} from "react-router-dom";
+import {useEffect, useState} from "react";
+import {fetchData} from "../common/consts.ts";
+
+export interface PermittedDatasetsResponse {
+    stableIds: string[]
+}
+
+export interface ExportRequest {
+    stableId: string
+}
 
 export const Dashboard = () => {
+    const [dataset, setDataset] = useState<PermittedDatasetsResponse>()
+
+    useEffect(() => {
+        fetchData<PermittedDatasetsResponse>("http://localhost:8080/api/datasets")
+            .then(response => setDataset(response))
+    }, [])
+
     return (
         <Container fluid className={"h-100"}>
             <Header/>
@@ -18,12 +35,16 @@ export const Dashboard = () => {
                             </Form.Group>
                         </Form>
                         <Nav className={"flex-column"}>
-                            <Nav.Item>
-                                <Nav.Link as={Link} to={`datasets/EGAD010000051`}>EGAD010000051</Nav.Link>
-                            </Nav.Item>
-                            <Nav.Item>
-                                <Nav.Link as={Link} to={`datasets/EGAD020000051`}>EGAD020000051</Nav.Link>
-                            </Nav.Item>
+                            {dataset ?
+                                dataset.stableIds.map((value, index) => {
+                                    return (
+                                        <Nav.Item key={index}>
+                                            <Nav.Link as={Link} to={`datasets/${value}`}>{value}</Nav.Link>
+                                        </Nav.Item>
+                                    )
+                                })
+                                : null
+                            }
                         </Nav>
                     </aside>
                 </Col>

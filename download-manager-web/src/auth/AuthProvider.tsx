@@ -4,9 +4,9 @@ import axios from "axios";
 import {AppSettings} from "../api/AppSettings.ts";
 
 const handleSignOut = (setToken: Dispatch<SetStateAction<string | null>>, navigate: NavigateFunction,) => {
-    setToken(null)
     localStorage.removeItem("token")
     localStorage.removeItem("refreshToken")
+    setToken(null)
     navigate("/")
 }
 
