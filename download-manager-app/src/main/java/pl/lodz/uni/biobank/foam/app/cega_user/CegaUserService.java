@@ -16,21 +16,11 @@ public class CegaUserService {
     }
 
     public void saveOrUpdate(CegaUserMessage event) {
+        CegaUser cu = cegaUserRepository
+                .findByUsername(event.username())
+                .orElseGet(CegaUser::new);
 
-        Set<CegaUserKey> keys = event.keys().stream()
-                .map(k -> new CegaUserKey(k.type(), k.key()))
-                .collect(Collectors.toSet());
-
-        CegaUser cu = new CegaUser();
-        cu.setEmail(event.email());
-        cu.setCountry(event.country());
-        cu.setFullName(event.fullName());
-        cu.setInstitution(event.institution());
-        cu.setPassword(event.passwordHash());
-        cu.setFullName(event.fullName());
-        cu.setUsername(event.username());
-        cu.setKeys(keys);
-
+        mapEventToEntity(event, cu);
         cegaUserRepository.save(cu);
     }
 
@@ -39,5 +29,31 @@ public class CegaUserService {
                 .findByUsername(username)
                 .map(CegaUser::getFullName)
                 .orElseThrow(() -> new UsernameNotFoundException(username));
+    }
+
+//    'c4gh-v1'
+    public CegaUserKey getPublicC4ghKey(String username) {
+        return cegaUserRepository
+                .userWithKeys(username)
+                .getKeys()
+                .stream()
+                .filter(k ->k.getType().equals("c4gh-v1"))
+                .findAny()
+                .orElseThrow(()-> new RuntimeException("User dont have C$GH public key"));
+    }
+
+    private static void mapEventToEntity(CegaUserMessage event, CegaUser cu) {
+        Set<CegaUserKey> keys = event.keys().stream()
+                .map(k -> new CegaUserKey(k.type(), k.key()))
+                .collect(Collectors.toSet());
+
+        cu.setEmail(event.email());
+        cu.setCountry(event.country());
+        cu.setFullName(event.fullName());
+        cu.setInstitution(event.institution());
+        cu.setPassword(event.passwordHash());
+        cu.setFullName(event.fullName());
+        cu.setUsername(event.username());
+        cu.setKeys(keys);
     }
 }

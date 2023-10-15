@@ -14,6 +14,6 @@ public class NewDatasetListener {
 
     @RabbitListener(queues = "foam_dataset")
     public void receiveMessage(DatasetData dataset) {
-        service.handle(dataset);
+        service.handleMessage(dataset);
     }
 }

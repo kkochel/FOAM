@@ -53,7 +53,7 @@ public class SecurityConfiguration extends GlobalAuthenticationConfigurerAdapter
                 .sessionManagement(session -> session.sessionCreationPolicy(STATELESS))
                 .authenticationProvider(authenticationProvider)
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
-                .csrf(csrf -> csrf.ignoringRequestMatchers("/api/auth/sign-in", "/api/auth/sign-out"))
+                .csrf(csrf -> csrf.ignoringRequestMatchers("/api/**"))
                 .cors(c -> c.configurationSource(corsConfigurationSource()))
                 .logout((logout) -> logout.logoutUrl("api/auth/sign-out")
                         .addLogoutHandler(logoutHandler)

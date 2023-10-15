@@ -9,12 +9,12 @@ import java.util.Set;
 import static jakarta.persistence.GenerationType.SEQUENCE;
 
 @Entity
-@Table(name = "cega_users", schema = "cega_user")
+@Table( schema = "cega", name = "cega_users")
 public class CegaUser {
 
     @Id
     @GeneratedValue(strategy = SEQUENCE, generator = "cega_user_generator")
-    @SequenceGenerator(name = "cega_user_generator", sequenceName = "cega_user_seq", schema = "cega_user", allocationSize = 1)
+    @SequenceGenerator(name = "cega_user_generator", sequenceName = "cega_user_seq", schema = "cega", allocationSize = 1)
     private Long id;
 
     @Column(name = "email")
@@ -36,7 +36,7 @@ public class CegaUser {
     private String password;
 
     @ElementCollection(fetch = FetchType.LAZY)
-    @CollectionTable(schema = "cega_user")
+    @CollectionTable(schema = "cega")
     private Set<CegaUserKey> keys = new HashSet<>();
 
     protected CegaUser() {

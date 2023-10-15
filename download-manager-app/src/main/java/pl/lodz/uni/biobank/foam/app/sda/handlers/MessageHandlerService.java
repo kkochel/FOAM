@@ -18,7 +18,7 @@ public class MessageHandlerService {
     public MessageHandlerService(ApplicationEventPublisher eventPublisher) {
         this.handler = new Permission(eventPublisher);
 
-        PermissionDeleted permissionDeleted = new PermissionDeleted();
+        PermissionDeleted permissionDeleted = new PermissionDeleted(eventPublisher);
 
         this.handler.setNext(permissionDeleted);
         permissionDeleted.setNext(null);
