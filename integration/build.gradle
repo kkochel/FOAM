@@ -7,7 +7,7 @@ plugins {
 }
 
 group = 'pl.lodz.uni.biobank.foam'
-version = '0.0.1-SNAPSHOT'
+version = '0.0.2-SNAPSHOT'
 
 java {
     sourceCompatibility = '17'
@@ -31,7 +31,6 @@ dependencies {
     runtimeOnly 'org.postgresql:postgresql'
     annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
-//    testImplementation 'org.springframework.amqp:spring-rabbit-test'
 }
 
 tasks.named('test') {
