@@ -4,7 +4,7 @@ spring:
     port: ${BROKER_PORT:5672}
     username: ${BROKER_USERNAME:guest}
     password: ${BROKER_PASSWORD:guest}
-    virtual-host: ${BROKER_VHOST:foam}
+    virtual-host: ${BROKER_VHOST:sda}
     listener:
       simple:
         prefetch: 1
