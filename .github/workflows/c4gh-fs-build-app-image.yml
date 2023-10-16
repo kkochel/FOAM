@@ -37,6 +37,9 @@ jobs:
         uses: docker/build-push-action@f2a1d5e99d037542a71f64918e516c093c6f3fc4
         with:
           context: ./c4gh-file-service
+          build-args: |
+            "FOAM_USER=${{secrets.USER}}"
+            "FOAM_TOKEN=${{secrets.TOKEN}}"
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
