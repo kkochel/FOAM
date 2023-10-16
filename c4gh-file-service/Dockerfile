@@ -2,6 +2,12 @@ FROM eclipse-temurin:17-jdk-alpine as builder
 
 WORKDIR /app
 
+ARG FOAM_USER
+ARG FOAM_TOKEN
+
+ENV FOAM_USER ${FOAM_USER}
+ENV FOAM_TOKEN ${FOAM_TOKEN}
+
 COPY gradle gradle
 COPY build.gradle settings.gradle gradlew ./
 COPY src src
