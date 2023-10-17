@@ -11,6 +11,9 @@ RUN mkdir -p build/libs/dependency && (cd build/libs/dependency; jar -xf ../*.ja
 
 FROM  eclipse-temurin:17-jre-alpine
 
+RUN apk add --no-cache ca-certificates java-cacerts \
+    && ln -sf /etc/ssl/certs/java/cacerts $JAVA_HOME/lib/security/cacerts
+
 ARG DEPENDENCY=/app/build/libs/dependency
 COPY --from=builder ${DEPENDENCY}/BOOT-INF/lib /app/lib
 COPY --from=builder ${DEPENDENCY}/META-INF /app/META-INF
