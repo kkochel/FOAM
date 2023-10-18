@@ -2,7 +2,7 @@ version: "3.9"
 services:
 
   "broker-sda-int":
-    image: "ghcr.io/kkochel/sensitive-data-archive:v0.0.6-rabbitmq"
+    image: "ghcr.io/kkochel/sensitive-data-archive:v0.0.10-rabbitmq"
     container_name: "broker-sda-int"
     restart: "no"
     environment:
@@ -37,7 +37,7 @@ services:
         ipv4_address: 172.16.239.2
 
   foam-int:
-    image: "foam:0.0.2-int"
+    image: "ghcr.io/kkochel/foam-integration:0.0.2-int"
     container_name: "foam-int"
     restart: "no"
     depends_on:

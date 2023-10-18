@@ -8,9 +8,9 @@ spring:
     ssl:
       enabled: ${BROKER_SSL:false}
       algorithm: TLSv1.2
-      key-store: file:${KEYSTORE_PATH}
-      key-store-type: ${KEYSTORE_TYPE:JKS}
-      key-store-password: ${KEYSTORE_PASSWORD}
+      key-store: file:${KEYSTORE_PATH:/opt/certs/client/keystore.p12}
+      key-store-type: ${KEYSTORE_TYPE:PKCS12}
+      key-store-password: ${KEYSTORE_PASSWORD:changeit}
   jpa:
     hibernate:
       ddl-auto: validate
