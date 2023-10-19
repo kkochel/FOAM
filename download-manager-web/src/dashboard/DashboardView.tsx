@@ -2,6 +2,7 @@ import {DatasetItem} from "./DatasetItem.tsx";
 import {useParams} from "react-router-dom";
 import {useEffect, useState} from "react";
 import {DatasetStatus, fetchData} from "../common/consts.ts";
+import {AppSettings} from "../api/AppSettings.ts";
 
 
 export interface DatasetFile {
@@ -28,7 +29,7 @@ export const DashboardView = () => {
 
 
   useEffect(() => {
-    fetchData<Dataset>(`http://localhost:8080/api/datasets/${datasetId}`)
+    fetchData<Dataset>(AppSettings.DOMAIN + `/api/datasets/${datasetId}`)
     .then(response => setDataset(response))
   }, [datasetId])
 

@@ -3,6 +3,7 @@ import {Col, Container, Form, Nav, Row} from "react-bootstrap";
 import {Link, Outlet} from "react-router-dom";
 import {useEffect, useState} from "react";
 import {fetchData} from "../common/consts.ts";
+import {AppSettings} from "../api/AppSettings.ts";
 
 export interface PermittedDatasetsResponse {
     stableIds: string[]
@@ -16,7 +17,7 @@ export const Dashboard = () => {
     const [dataset, setDataset] = useState<PermittedDatasetsResponse>()
 
     useEffect(() => {
-        fetchData<PermittedDatasetsResponse>("http://localhost:8080/api/datasets")
+        fetchData<PermittedDatasetsResponse>(AppSettings.DOMAIN + "/api/datasets")
             .then(response => setDataset(response))
     }, [])
 

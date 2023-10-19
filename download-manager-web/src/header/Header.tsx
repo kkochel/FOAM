@@ -4,6 +4,7 @@ import {FC, useContext, useEffect, useState} from "react";
 import {Link, useNavigate} from "react-router-dom";
 import {AuthContext} from "../auth/AuthProvider.tsx";
 import {fetchData} from "../common/consts.ts";
+import {AppSettings} from "../api/AppSettings.ts";
 
 interface HeaderResponse {
     fullName: string
@@ -18,7 +19,7 @@ export const Header: FC = () => {
 
     useEffect(() => {
         if (isAuthenticated) {
-            fetchData<HeaderResponse>("http://localhost:8080/api/cega-users/full-name")
+            fetchData<HeaderResponse>(AppSettings.DOMAIN + "/api/cega-users/full-name")
                 .then(response => setFullName(response.fullName))
 
         }

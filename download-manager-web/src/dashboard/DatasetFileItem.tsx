@@ -5,6 +5,7 @@ import {ConfirmationDialog} from "../common/ConfirmationDialog.tsx";
 import {SuccessNotification} from "../common/SuccessNotification.tsx";
 import {DatasetStatus, disableExportButton, postData} from "../common/consts.ts";
 import {ExportRequest} from "./Dashboard.tsx";
+import {AppSettings} from "../api/AppSettings.ts";
 
 interface Props {
     eventKeyId: string
@@ -22,8 +23,7 @@ export const DatasetFileItem: FC<Props> = (props) => {
 
 
     const handleExportFile = () => {
-        postData<ExportRequest, string>(`http://localhost:8080/api/export/datasets/${datasetId}/files`, {stableId: datasetFile.stableId})
-            .then(value => console.log("+++++", value))
+        postData<ExportRequest, string>(AppSettings.DOMAIN + `/api/export/datasets/${datasetId}/files`, {stableId: datasetFile.stableId})
             .then(() => setSuccessNotification(true))
     }
 

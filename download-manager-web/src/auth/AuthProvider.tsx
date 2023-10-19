@@ -11,7 +11,7 @@ const handleSignOut = (setToken: Dispatch<SetStateAction<string | null>>, naviga
 }
 
 const handleSignIn = (setToken: Dispatch<SetStateAction<string | null>>, navigate: NavigateFunction, request: SingInRequest) => {
-    axios.post(AppSettings.SIGN_IN_ENDPOINT, request)
+    axios.post(AppSettings.DOMAIN + "/api/auth/sign-in", request)
         .then(response => {
             if (response && response.data.token) {
                 setToken(response.data.token)

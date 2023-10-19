@@ -28,5 +28,5 @@ archive:
     secretKey: ${S3_SECRET_KEY:3j95SSx27Tj3BIxvIXVdQNXKXiUv1jQKP02FSkUC}
 
 crypt4gh:
-  private-key-path: /home/kkochel/IdeaProjects/FOAM/c4gh-file-service/src/test/resources/server_c4gh.sec
-  private-key-password-path: uxPFPxI4Oe4H5qJ1UO7kMCkvKgNHEzrX
+  private-key-path: ${C4GH_PRIVATE_KEY}
+  private-key-password-path: ${C4GH_PRIVATE_KEY_PASSWORD}
