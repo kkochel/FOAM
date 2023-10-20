@@ -7,21 +7,13 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.core.io.Resource;
-import org.springframework.util.FileCopyUtils;
-
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.Reader;
-
-import static java.nio.charset.StandardCharsets.UTF_8;
 
 @Configuration
 @EnableRabbit
 public class AppConfiguration {
     private @Value("${outbox.path}") String outboxPath;
-    private @Value("${crypt4gh.private-key-path}") Resource c4ghSecKeyPath;
-    private @Value("${crypt4gh.private-key-password-path}") Resource c4ghPasswordPath;
+    private @Value("${crypt4gh.private-key-path}") String crypt4ghPrivateKeyPath;
+    private @Value("${crypt4gh.private-key-password}") String crypt4ghPrivateKeyPassword;
     private @Value("${archive.path}") String archivePath;
     private @Value("${archive.s3.endpoint}") String s3Endpoint;
     private @Value("${archive.s3.accessKey}") String s3AccessKey;
@@ -51,26 +43,8 @@ public class AppConfiguration {
     }
 
     @Bean
-    public String crypt4ghPrivateKey() {
-        try (Reader reader = new InputStreamReader(c4ghSecKeyPath.getInputStream(), UTF_8)) {
-            return FileCopyUtils.copyToString(reader);
-        } catch (IOException e) {
-            throw new RuntimeException("Cannot load content of file:" + e);
-        }
-    }
-
-    @Bean
-    public String crypt4ghPrivateKeyPassword() {
-        try (Reader reader = new InputStreamReader(c4ghPasswordPath.getInputStream(), UTF_8)) {
-            return FileCopyUtils.copyToString(reader);
-        } catch (IOException e) {
-            throw new RuntimeException("Cannot load content of file:" + e);
-        }
-    }
-
-    @Bean
-    public MessageListener listener(C4ghService service, String crypt4ghPrivateKey, String crypt4ghPrivateKeyPassword) {
-        return new MessageListener(service, crypt4ghPrivateKey, crypt4ghPrivateKeyPassword);
+    public MessageListener listener(C4ghService service) {
+            return new MessageListener(service, crypt4ghPrivateKeyPath, crypt4ghPrivateKeyPassword);
     }
 
     @Bean

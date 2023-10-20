@@ -28,5 +28,5 @@ archive:
     secretKey: ${S3_SECRET_KEY:3j95SSx27Tj3BIxvIXVdQNXKXiUv1jQKP02FSkUC}
 
 crypt4gh:
-  private-key-path: file:${C4GH_PRIVATE_KEY}
-  private-key-password-path: file:${C4GH_PRIVATE_KEY_PASSWORD}
+  private-key-path: ${C4GH_PRIVATE_KEY}
+  private-key-password: ${C4GH_PRIVATE_KEY_PASSWORD}
