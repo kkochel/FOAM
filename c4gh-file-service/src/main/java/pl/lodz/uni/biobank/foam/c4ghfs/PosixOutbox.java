@@ -15,7 +15,7 @@ public class PosixOutbox implements Outbox {
 
     @Override
     public void exportFile(InputStream outboxFile, String fileName, String username) throws IOException {
-        File file = new File(archivePath + "/" + username + "/" + fileName);
+        File file = new File(archivePath + "/" + username + "/" + new File(fileName).getName());
         if (!file.exists()) {
             FileUtils.copyToFile(outboxFile, file);
         }
