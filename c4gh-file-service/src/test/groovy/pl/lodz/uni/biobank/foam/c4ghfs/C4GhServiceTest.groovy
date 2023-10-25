@@ -21,7 +21,7 @@ class C4GhServiceTest extends Specification {
     def "Re-encrypt file"() {
         given:
         def sut = new C4ghService(new PosixArchive("src/test/resources/"), new PosixOutbox("src/test/resources/"))
-        def task = new C4ghExportTask(ARCHIVED_FILE_HEADER, ARCHIVED_FILE, "ted_oww/encrypted_file.c4gh", new File(REQUESTER_PUB_KEY).text, "requester")
+        def task = new C4ghExportTask(UUID.randomUUID(), ARCHIVED_FILE_HEADER, ARCHIVED_FILE, "ted_oww/encrypted_file.c4gh", new File(REQUESTER_PUB_KEY).text, "requester")
 
         when:
         sut.encryptionWithReceiverPublicKey(task, SERVER_SEC_KEY, SERVER_PASSPHRASE)
