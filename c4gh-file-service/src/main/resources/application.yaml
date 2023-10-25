@@ -1,4 +1,6 @@
 spring:
+  application:
+    name: c4gh-file-service
   rabbitmq:
     host: ${BROKER_HOST:172.16.232.4}
     port: ${BROKER_PORT:5672}
