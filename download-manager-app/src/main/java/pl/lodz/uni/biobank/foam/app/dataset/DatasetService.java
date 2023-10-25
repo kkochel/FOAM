@@ -1,5 +1,7 @@
 package pl.lodz.uni.biobank.foam.app.dataset;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import pl.lodz.uni.biobank.foam.app.permission.PermissionService;
 import pl.lodz.uni.biobank.foam.app.permission.PermissionStatus;
@@ -9,6 +11,8 @@ import java.util.List;
 
 @Service
 public class DatasetService {
+    private static final Logger log = LoggerFactory.getLogger(DatasetService.class);
+
     private final DatasetFileRepository fileRepository;
     private final DatasetRepository repository;
     private final PermissionService permissionService;
@@ -19,12 +23,13 @@ public class DatasetService {
         this.permissionService = permissionService;
     }
 
-    public void handleMessage(DatasetData datasetData) {
-        List<DatasetFile> filesList = datasetData.datasetFiles().stream().map(DatasetFile::new).toList();
-        Dataset dataset = new Dataset(datasetData);
+    public void handleMessage(DatasetData event) {
+        List<DatasetFile> filesList = event.datasetFiles().stream().map(DatasetFile::new).toList();
+        Dataset dataset = new Dataset(event);
         filesList.forEach(dataset::addFile);
 
         repository.save(dataset);
+        log.info("Dataset event processed correctly. StableId: {} ", event.stableId());
     }
 
 

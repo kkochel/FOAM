@@ -1,5 +1,7 @@
 package pl.lodz.uni.biobank.foam.app.cega_user;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import pl.lodz.uni.biobank.foam.app.sda.api.CegaUserMessage;
@@ -9,6 +11,7 @@ import java.util.stream.Collectors;
 
 @Service
 public class CegaUserService {
+    private static final Logger log = LoggerFactory.getLogger(CegaUserService.class);
     private final CegaUserRepository cegaUserRepository;
 
     public CegaUserService(CegaUserRepository cegaUserRepository) {
@@ -22,6 +25,7 @@ public class CegaUserService {
 
         mapEventToEntity(event, cu);
         cegaUserRepository.save(cu);
+        log.info("User cega event processed correctly. Username: {} ", event.username());
     }
 
     public String getUserFullName(String username) {
@@ -39,7 +43,7 @@ public class CegaUserService {
                 .stream()
                 .filter(k ->k.getType().equals("c4gh-v1"))
                 .findAny()
-                .orElseThrow(()-> new RuntimeException("User dont have C$GH public key"));
+                .orElseThrow(()-> new RuntimeException("User dont have C4GH public key"));
     }
 
     private static void mapEventToEntity(CegaUserMessage event, CegaUser cu) {

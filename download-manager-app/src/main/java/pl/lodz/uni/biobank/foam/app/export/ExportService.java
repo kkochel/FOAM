@@ -9,6 +9,8 @@ import pl.lodz.uni.biobank.foam.app.dataset.FileData;
 import pl.lodz.uni.biobank.foam.app.permission.PermissionService;
 import pl.lodz.uni.biobank.foam.app.permission.PermissionStatus;
 
+import java.util.UUID;
+
 @Service
 public class ExportService {
     private final ExportSender sender;
@@ -33,6 +35,6 @@ public class ExportService {
         FileData file = datasetService.getFileById(fileId);
         CegaUserKey key = userService.getPublicC4ghKey(username);
 
-        sender.handleSend(new C4ghExportTask(file.header(), file.archiveFilePath(), file.fileName(), key.getKey(), username));
+        sender.handleSend(new C4ghExportTask(UUID.randomUUID(), file.header(), file.archiveFilePath(), file.fileName(), key.getKey(), username));
     }
 }

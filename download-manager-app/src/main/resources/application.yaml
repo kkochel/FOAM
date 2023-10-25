@@ -1,4 +1,6 @@
 spring:
+  application:
+    name: download-manager-app
   rabbitmq:
     host: ${BROKER_HOST:172.16.232.4}
     port: ${BROKER_PORT:5672}
@@ -36,5 +38,5 @@ application:
 
 logging:
   level:
-    org.springframework.security: ${SECURITY_LOGGING_LEVEL:debug}
-    org.springframework.web: ${WEB_LOGGING_LEVEL:debug}
+    org.springframework.security: ${SECURITY_LOGGING_LEVEL:error}
+    org.springframework.web: ${WEB_LOGGING_LEVEL:info}

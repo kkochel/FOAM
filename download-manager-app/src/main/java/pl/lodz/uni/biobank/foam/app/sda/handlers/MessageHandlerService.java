@@ -4,6 +4,8 @@ package pl.lodz.uni.biobank.foam.app.sda.handlers;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import org.apache.tomcat.util.json.JSONParser;
 import org.apache.tomcat.util.json.ParseException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.amqp.core.Message;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
@@ -13,6 +15,8 @@ import java.util.LinkedHashMap;
 
 @Service
 public class MessageHandlerService {
+    private static final Logger log = LoggerFactory.getLogger(MessageHandlerService.class);
+
     private final MessageHandler handler;
 
     public MessageHandlerService(ApplicationEventPublisher eventPublisher) {
@@ -32,6 +36,7 @@ public class MessageHandlerService {
 
         CegaMessageType messageType = CegaMessageType.findByLabel(type);
 
+        log.info("Handled message with type {} and body {}", type, body);
         handler.handle(messageType, body);
     }
 }

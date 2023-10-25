@@ -1,5 +1,7 @@
 package pl.lodz.uni.biobank.foam.app.permission;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 import pl.lodz.uni.biobank.foam.app.sda.api.PermissionDeletedMessage;
@@ -9,6 +11,8 @@ import java.util.List;
 
 @Service
 public class PermissionService {
+    private static final Logger log = LoggerFactory.getLogger(PermissionService.class);
+
     private final DatasetPermissionRepository repository;
 
     public PermissionService(DatasetPermissionRepository repository) {
@@ -24,9 +28,11 @@ public class PermissionService {
 
         if (permissions.isEmpty()) {
             repository.persist(new Permission(username, datasetId));
+            log.info("User entitlement {} to the resource {} has been granted", event.user(), event.datasetId());
         } else {
             permissions.get(0).makeAvailable();
             repository.merge(permissions.get(0).makeAvailable());
+            log.info("User entitlement {} to the resource {} has been granted again", event.user(), event.datasetId());
         }
     }
 
@@ -39,6 +45,7 @@ public class PermissionService {
 
         if (!permissions.isEmpty()) {
             repository.merge(permissions.get(0).revoke());
+            log.info("User entitlement {} to the resource {} has been revoked", event.user(), event.datasetId());
         }
     }
 

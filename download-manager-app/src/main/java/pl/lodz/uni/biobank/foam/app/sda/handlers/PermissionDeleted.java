@@ -19,7 +19,6 @@ public class PermissionDeleted implements MessageHandler {
         this.nextHandler = handler;
     }
 
-    //permission.deleted
     @Override
     public void handle(CegaMessageType type, String message) throws JsonProcessingException {
         if (CegaMessageType.PERMISSION_DELETED.equals(type)) {
