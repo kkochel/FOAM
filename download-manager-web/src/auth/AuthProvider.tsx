@@ -10,23 +10,29 @@ const handleSignOut = (setToken: Dispatch<SetStateAction<string | null>>, naviga
     navigate("/")
 }
 
-const handleSignIn = (setToken: Dispatch<SetStateAction<string | null>>, navigate: NavigateFunction, request: SingInRequest) => {
-    axios.post(AppSettings.DOMAIN + "/api/auth/sign-in", request)
+const handleSignIn = (setToken: Dispatch<SetStateAction<string | null>>, navigate: NavigateFunction, request: SingInRequest): Promise<number> => {
+    return  axios.post(AppSettings.DOMAIN + "/api/auth/sign-in", request, {timeout: 3000})
         .then(response => {
             if (response && response.data.token) {
                 setToken(response.data.token)
                 localStorage.setItem("token", response.data.token)
                 localStorage.setItem("refreshToken", response.data.refreshToken)
             }
+            return response.status
         })
-        .then(() => navigate("/dashboard"))
+        .then((value) => {
+            navigate("/dashboard")
+            return value
+        })
+        .catch(reason => {return reason.response.status} )
+
 }
 
 
 interface AuthContextProps {
     token: string | null
     setToken: Dispatch<SetStateAction<string | null>>
-    handleSignIn: (setToken: Dispatch<SetStateAction<string | null>>, navigate: NavigateFunction, request: SingInRequest) => void
+    handleSignIn: (setToken: Dispatch<SetStateAction<string | null>>, navigate: NavigateFunction, request: SingInRequest) => Promise<number>
     handleSignOut: (setToken: Dispatch<SetStateAction<string | null>>, navigate: NavigateFunction) => void
 
 }

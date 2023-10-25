@@ -3,16 +3,28 @@ import {Button, Col, Container, Form, Row} from "react-bootstrap";
 import {useNavigate} from "react-router-dom";
 import {AuthContext} from "../auth/AuthProvider.tsx";
 
+function invalidSignIn(responseStatus: number | undefined) {
+  return <>
+    {responseStatus && responseStatus !== 200 ?
+    <Form.Text className={"text-danger fw-bolder"}>
+      Invalid credentials or user does not exist
+    </Form.Text> : null}
+  </>;
+}
+
 export const SignInForm = () => {
   const [username, setUsername] = useState<string>()
   const [password, setPassword] = useState<string>()
   const navigate = useNavigate();
   const {setToken, handleSignIn} = useContext(AuthContext)
   const disableSignInButton = (username === undefined || username.length === 0) || (password === undefined || password.length === 0)
+  const [responseStatus, setResponseStatus] = useState<number>()
 
   function handleSubmit() {
     if (username && password) {
       handleSignIn(setToken, navigate, {username: username, password: password})
+      .then(value => setResponseStatus(value))
+      .catch(reason => setResponseStatus(reason))
     }
   }
 
@@ -34,6 +46,7 @@ export const SignInForm = () => {
                           value={password}
                           onChange={event => setPassword(event.target.value)}/>
           </Form.Group>
+          {invalidSignIn(responseStatus)}
         </Form>
         <Button disabled={disableSignInButton} className={"m-2"} onClick={handleSubmit}>Sign in</Button>
       </Col>
