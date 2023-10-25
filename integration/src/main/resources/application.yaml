@@ -1,4 +1,6 @@
 spring:
+  application:
+    name: sda-foam-integration
   jpa:
     hibernate:
       ddl-auto: validate
