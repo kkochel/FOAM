@@ -1,10 +1,10 @@
-import {FC, useState} from "react";
-import {Dataset} from "./DashboardView.tsx";
-import {Accordion, Button, Container} from "react-bootstrap";
-import {DatasetFileItem} from "./DatasetFileItem.tsx";
+import {FC, Fragment, useEffect, useState} from "react";
+import {Dataset, DatasetFile} from "./DashboardView.tsx";
+import {Button, Col, Container, Row} from "react-bootstrap";
 import {ConfirmationDialog} from "../common/ConfirmationDialog.tsx";
 import {SuccessNotification} from "../common/SuccessNotification.tsx";
-import {disableExportButton} from "../common/consts.ts";
+import {disableExportButton, fetchData} from "../common/consts.ts";
+import {DatasetFileItemCard} from "./DatasetFileItemCard.tsx";
 
 interface Props {
     dataset: Dataset
@@ -16,28 +16,36 @@ export const DatasetItem: FC<Props> = (props) => {
     const {dataset} = props
     const [confirmationDialog, setConfirmationDialog] = useState<boolean>(false)
     const [successNotification, setSuccessNotification] = useState(false);
+    const [files, setFiles] = useState<DatasetFile[]>()
+
+    useEffect(() => {
+        fetchData<DatasetFile[]>(`/api/export/datasets/${dataset.stableId}/files`)
+            .then(response => setFiles(response))
+    }, []);
 
     const handleExportAllFiles = () => {
-
         setSuccessNotification(true)
     }
 
     return (
         <Container className={"border-with-shadow"}>
             <h4 className={"mt-2"}>{dataset.stableId}</h4>
-            <Accordion>
-                {dataset.files.map((value, index) => {
-                    return <DatasetFileItem key={index}
-                                            eventKeyId={index.toString()}
-                                            datasetFile={value}
-                                            datasetStatus={dataset.status}
-                                            datasetId={dataset.stableId}/>})}
-
-            </Accordion>
-
-            <Button onClick={() => setConfirmationDialog(true)}
+            <Button variant={"outline-primary"}
+                    onClick={() => setConfirmationDialog(true)}
                     className={"m-3"}
                     disabled={disableExportButton(dataset.status)}>Export all files to outbox</Button>
+            <Row xs={1} md={2} className="overflow-auto" style={{maxHeight: '75vh'}}>
+                {files && files.map((value, index) => {
+                    return <Fragment key={index}>
+                        <Col>
+                            <DatasetFileItemCard
+                                datasetFile={value}
+                                datasetStatus={dataset.status}
+                                datasetId={dataset.stableId}/>
+                        </Col>
+                    </Fragment>
+                })}
+            </Row>
             <ConfirmationDialog showConfirmation={confirmationDialog}
                                 onHideConfirmation={setConfirmationDialog}
                                 action={handleExportAllFiles}

@@ -2,13 +2,11 @@ import {DatasetItem} from "./DatasetItem.tsx";
 import {useParams} from "react-router-dom";
 import {useEffect, useState} from "react";
 import {DatasetStatus, fetchData} from "../common/consts.ts";
-import {AppSettings} from "../api/AppSettings.ts";
 
 
 export interface DatasetFile {
   stableId: string,
-  fileSize: number
-  history: string[]
+  lastStage: string,
 }
 
 export interface Dataset {
@@ -16,7 +14,6 @@ export interface Dataset {
   description: string
   title: string
   status: DatasetStatus
-  files: DatasetFile[]
 }
 
 type UrlParams = {
@@ -29,7 +26,7 @@ export const DashboardView = () => {
 
 
   useEffect(() => {
-    fetchData<Dataset>(AppSettings.DOMAIN + `/api/datasets/${datasetId}`)
+    fetchData<Dataset>(`/api/datasets/${datasetId}`)
     .then(response => setDataset(response))
   }, [datasetId])
 
