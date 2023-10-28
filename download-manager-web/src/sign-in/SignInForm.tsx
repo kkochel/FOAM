@@ -36,19 +36,21 @@ export const SignInForm = () => {
         <Form onSubmit={e => e.preventDefault()}>
           <Form.Group>
             <Form.Label className={"fw-bold align-content-start"}>Username</Form.Label>
-            <Form.Control type="text"
-                          value={username}
+            <Form.Control id="username-input"
+                          type="text"
+                          value={username || ''}
                           onChange={event => setUsername(event.target.value)}/>
           </Form.Group>
           <Form.Group>
             <Form.Label className={"fw-bold"}>Password</Form.Label>
-            <Form.Control type="password"
-                          value={password}
+            <Form.Control id="password-input"
+                          type="password"
+                          value={password || ''}
                           onChange={event => setPassword(event.target.value)}/>
           </Form.Group>
           {invalidSignIn(responseStatus)}
         </Form>
-        <Button disabled={disableSignInButton} className={"m-2"} onClick={handleSubmit}>Sign in</Button>
+        <Button variant={"outline-primary"} disabled={disableSignInButton} className={"m-2"} onClick={handleSubmit}>Sign in</Button>
       </Col>
       <Col xs={4}/>
     </Row>

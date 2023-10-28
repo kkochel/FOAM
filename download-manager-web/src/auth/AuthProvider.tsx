@@ -1,7 +1,6 @@
 import {createContext, Dispatch, FC, ReactNode, SetStateAction, useState} from "react";
 import {NavigateFunction} from "react-router-dom";
-import axios from "axios";
-import {AppSettings} from "../api/AppSettings.ts";
+import {axiosClient} from "../main.tsx";
 
 const handleSignOut = (setToken: Dispatch<SetStateAction<string | null>>, navigate: NavigateFunction,) => {
     localStorage.removeItem("token")
@@ -11,7 +10,7 @@ const handleSignOut = (setToken: Dispatch<SetStateAction<string | null>>, naviga
 }
 
 const handleSignIn = (setToken: Dispatch<SetStateAction<string | null>>, navigate: NavigateFunction, request: SingInRequest): Promise<number> => {
-    return  axios.post(AppSettings.DOMAIN + "/api/auth/sign-in", request, {timeout: 3000})
+    return  axiosClient.post("/api/auth/sign-in", request)
         .then(response => {
             if (response && response.data.token) {
                 setToken(response.data.token)
@@ -25,7 +24,6 @@ const handleSignIn = (setToken: Dispatch<SetStateAction<string | null>>, navigat
             return value
         })
         .catch(reason => {return reason.response.status} )
-
 }
 
 
