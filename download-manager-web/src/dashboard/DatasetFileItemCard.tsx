@@ -49,13 +49,12 @@ export const DatasetFileItemCard: FC<Props> = (props) => {
             <Card className={"m-1 border-with-shadow"}>
                 <Card.Body>
                     <Card.Title>{datasetFile.stableId} </Card.Title>
-                    <Card.Subtitle className="mb-2 text-muted">{getLastStatus(datasetFile.lastStage)}</Card.Subtitle>
-                    <Card.Text>
+                    <Card.Subtitle className={"text-bg-primary"}>{getLastStatus(datasetFile.lastStage)}</Card.Subtitle>
                         {fileLog ?
                             <>
-                                <h6>Export history:</h6>
+                                <p className={"fw-bolder"}>Export history:</p>
                                 <ListGroup className={"overflow-auto"}
-                                           style={{"maxHeight": "300px"}}>
+                                           style={{"maxHeight": "200px"}}>
                                     {fileLog.map((value, index) => {
                                         return <ListGroup.Item key={index}>{value.stage} ({value.created})</ListGroup.Item>
                                     })}
@@ -63,7 +62,6 @@ export const DatasetFileItemCard: FC<Props> = (props) => {
                             </>
                             : null
                         }
-                    </Card.Text>
                     <Button variant={"outline-primary"}
                             disabled={disableExportButton(datasetStatus)}
                             onClick={() => setConfirmationDialog(true)}
