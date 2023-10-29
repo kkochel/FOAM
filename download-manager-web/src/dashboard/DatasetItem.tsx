@@ -5,6 +5,7 @@ import {ConfirmationDialog} from "../common/ConfirmationDialog.tsx";
 import {SuccessNotification} from "../common/SuccessNotification.tsx";
 import {disableExportButton, fetchData} from "../common/consts.ts";
 import {DatasetFileItemCard} from "./DatasetFileItemCard.tsx";
+import {useQuery} from "@tanstack/react-query";
 
 interface Props {
     dataset: Dataset
@@ -18,10 +19,18 @@ export const DatasetItem: FC<Props> = (props) => {
     const [successNotification, setSuccessNotification] = useState(false);
     const [files, setFiles] = useState<DatasetFile[]>()
 
+    const href: string = `/api/export/datasets/${dataset.stableId}/files`
+
+    const {data} = useQuery({
+        queryKey: ["dataset-files", dataset.stableId],
+        queryFn: () => fetchData<DatasetFile[]>(href)
+    })
+
     useEffect(() => {
-        fetchData<DatasetFile[]>(`/api/export/datasets/${dataset.stableId}/files`)
-            .then(response => setFiles(response))
-    }, []);
+        if (data) {
+            setFiles(data)
+        }
+    }, [data]);
 
     const handleExportAllFiles = () => {
         setSuccessNotification(true)

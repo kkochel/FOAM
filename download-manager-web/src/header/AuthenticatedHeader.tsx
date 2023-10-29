@@ -10,11 +10,11 @@ interface HeaderResponse {
     fullName: string
 }
 
-const href = "/api/cega-users/full-name";
-
 export const AuthenticatedHeader: FC = () => {
     const {handleSignOut, setToken} = useContext(AuthContext)
     const [fullName, setFullName] = useState<string>()
+
+    const href = "/api/cega-users/full-name";
     const navigate = useNavigate()
 
 
@@ -38,8 +38,6 @@ export const AuthenticatedHeader: FC = () => {
                          height={"100px"}
                          className="d-inline-block align-top" alt="FEGA logo"/>
                 </Navbar.Brand>
-
-
                 <Navbar.Collapse className="justify-content-end">
                     <Navbar.Text className={"fw-bold"}>
                         Signed in as: {fullName}

@@ -3,6 +3,7 @@ import {Col, Container, Form, Nav, Row} from "react-bootstrap";
 import {Link, Outlet} from "react-router-dom";
 import {useEffect, useState} from "react";
 import {fetchData} from "../common/consts.ts";
+import {useQuery} from "@tanstack/react-query";
 
 export interface PermittedDatasetsResponse {
     stableIds: string[]
@@ -17,10 +18,18 @@ export const Dashboard = () => {
     const [filteredDatasets, setFilteredDatasets] = useState<PermittedDatasetsResponse>()
     const [filterValue, setFilterValue] = useState<string>()
 
+    const href: string = "/api/datasets"
+
+    const {data} = useQuery({
+        queryKey: ["datasets"],
+        queryFn: () => fetchData<PermittedDatasetsResponse>(href)
+    })
+
     useEffect(() => {
-        fetchData<PermittedDatasetsResponse>("/api/datasets")
-            .then(response => setDataset(response))
-    }, [])
+        if (data) {
+            setDataset(data)
+        }
+    }, [data]);
 
 
     useEffect(() => {

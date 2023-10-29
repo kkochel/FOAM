@@ -2,6 +2,7 @@ import {DatasetItem} from "./DatasetItem.tsx";
 import {useParams} from "react-router-dom";
 import {useEffect, useState} from "react";
 import {DatasetStatus, fetchData} from "../common/consts.ts";
+import {useQuery} from "@tanstack/react-query";
 
 
 export interface DatasetFile {
@@ -24,11 +25,18 @@ export const DashboardView = () => {
   const {datasetId} = useParams<UrlParams>();
   const [dataset, setDataset] = useState<Dataset>()
 
+  const href: string = `/api/datasets/${datasetId}`
+
+  const {data} = useQuery({
+    queryKey: ["dataset", datasetId],
+    queryFn: () => fetchData<Dataset>(href)
+  })
 
   useEffect(() => {
-    fetchData<Dataset>(`/api/datasets/${datasetId}`)
-    .then(response => setDataset(response))
-  }, [datasetId])
+    if (data) {
+      setDataset(data)
+    }
+  }, [data]);
 
 
   return (
