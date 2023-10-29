@@ -22,9 +22,15 @@ public class JwtService {
     private long refreshExpiration;
 
 
-    public SignInResponse generateTokens(Authentication authenticate) {
+    public AuthenticationResponse generateTokens(Authentication authenticate) {
         UserDetailsImpl user = (UserDetailsImpl) authenticate.getPrincipal();
-        return new SignInResponse(generateToken(user, jwtExpiration), generateToken(user, refreshExpiration));
+        return new AuthenticationResponse(generateToken(user, jwtExpiration), generateToken(user, refreshExpiration));
+    }
+
+    public AuthenticationResponse refreshToken(String refreshToken) {
+        validate(refreshToken);
+        String username = getUsername(refreshToken);
+        return new AuthenticationResponse(generateToken(username, jwtExpiration), generateToken(username, refreshExpiration));
     }
 
     public void validate(String token) {
@@ -35,7 +41,7 @@ public class JwtService {
         try {
             Jwts.parser().verifyWith(key()).build().parse(token);
         } catch (JwtException e) {
-            throw new SecurityException(e);
+            throw new JwtTokenExpiredException(e);
         }
     }
 
@@ -47,8 +53,12 @@ public class JwtService {
     }
 
     private String generateToken(UserDetails userDetails, long jwtExpiration) {
+        return generateToken(userDetails.getUsername(), jwtExpiration);
+    }
+
+    private String generateToken(String username, long jwtExpiration) {
         return Jwts.builder()
-                .subject(userDetails.getUsername())
+                .subject(username)
                 .issuedAt(new Date(System.currentTimeMillis()))
                 .expiration(new Date(System.currentTimeMillis() + jwtExpiration))
                 .signWith(key())

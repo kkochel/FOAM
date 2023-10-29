@@ -16,10 +16,14 @@ public class AuthService {
         this.jwtService = jwtService;
     }
 
-    public SignInResponse authenticate(SignInRequest request) {
+    public AuthenticationResponse authenticate(SignInRequest request) {
         Authentication authenticate = am.authenticate(new UsernamePasswordAuthenticationToken(request.username(), request.password()));
         SecurityContextHolder.getContext().setAuthentication(authenticate);
 
         return jwtService.generateTokens(authenticate);
+    }
+
+    public AuthenticationResponse refreshToken(RefreshTokenQuery refreshTokenQuery) {
+        return jwtService.refreshToken(refreshTokenQuery.refreshToken());
     }
 }
