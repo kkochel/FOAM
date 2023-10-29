@@ -16,12 +16,13 @@ class C4GhServiceTest extends Specification {
     final RE_ENCRYPTED_FILE = "src/test/resources/requester/encrypted_file.c4gh"
     final SERVER_PASSPHRASE = 'uxPFPxI4Oe4H5qJ1UO7kMCkvKgNHEzrX'
     final REQUESTER_PASSPHRASE = 'requester'
+    def stageSender = Mock(ExportStageSender)
 
 
     def "Re-encrypt file"() {
         given:
-        def sut = new C4ghService(new PosixArchive("src/test/resources/"), new PosixOutbox("src/test/resources/"))
-        def task = new C4ghExportTask(UUID.randomUUID(), ARCHIVED_FILE_HEADER, ARCHIVED_FILE, "ted_oww/encrypted_file.c4gh", new File(REQUESTER_PUB_KEY).text, "requester")
+        def sut = new C4ghService(new PosixArchiveFileTransmitter("src/test/resources/"), new PosixOutboxFileTransmitter("src/test/resources/", stageSender), stageSender)
+        def task = new C4ghExportTask(UUID.randomUUID(), ARCHIVED_FILE_HEADER, ARCHIVED_FILE, "ted_owl/encrypted_file.c4gh", new File(REQUESTER_PUB_KEY).text, "requester", "EGAF00000001")
 
         when:
         sut.encryptionWithReceiverPublicKey(task, SERVER_SEC_KEY, SERVER_PASSPHRASE)
