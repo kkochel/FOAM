@@ -1,4 +1,4 @@
-import {Header} from "../header/Header.tsx";
+import {AuthenticatedHeader} from "../header/AuthenticatedHeader.tsx";
 import {Col, Container, Form, Nav, Row} from "react-bootstrap";
 import {Link, Outlet} from "react-router-dom";
 import {useEffect, useState} from "react";
@@ -34,7 +34,7 @@ export const Dashboard = () => {
 
     return (
         <Container fluid className={"h-100"}>
-            <Header/>
+            <AuthenticatedHeader/>
             <Row className={"h-100"}>
                 <Col xs={2}>
                     <aside className={"h-100 border-with-shadow"}>

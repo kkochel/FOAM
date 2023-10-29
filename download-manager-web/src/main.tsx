@@ -53,7 +53,7 @@ const isTokenExpired = (): boolean | undefined => {
         const decoded = jwtDecode(token)
         if (decoded.iat) {
             const nextTwoMinutes: Date = addMinutes(new Date(), 2)
-            return decoded.iat > nextTwoMinutes.getMilliseconds()
+            return nextTwoMinutes.getMilliseconds() > decoded.iat
         }
     }
 }
@@ -85,7 +85,7 @@ axiosClient.interceptors.response.use(async (response) => {
 const queryClient = new QueryClient({
     defaultOptions: {
         queries: {
-            staleTime: Infinity,
+            staleTime: 300000,
         },
     },
 })
