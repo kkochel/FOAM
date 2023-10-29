@@ -5,10 +5,10 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
 
-public class PosixArchive implements Archive {
+public class PosixArchiveFileTransmitter implements ArchiveFileTransmitter {
     private final String archivePath;
 
-    public PosixArchive(String archivePath) {
+    public PosixArchiveFileTransmitter(String archivePath) {
         this.archivePath = archivePath;
     }
 

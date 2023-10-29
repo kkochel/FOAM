@@ -9,11 +9,11 @@ import java.io.InputStream;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 
-public class S3Archive implements Archive {
+public class S3ArchiveFileTransmitter implements ArchiveFileTransmitter {
     private final MinioClient client;
     private final String bucketName;
 
-    public S3Archive(MinioClient client, String bucketName) {
+    public S3ArchiveFileTransmitter(MinioClient client, String bucketName) {
         this.client = client;
         this.bucketName = bucketName;
     }

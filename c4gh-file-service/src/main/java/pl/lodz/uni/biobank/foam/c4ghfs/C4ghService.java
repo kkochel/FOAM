@@ -15,26 +15,47 @@ import java.security.PublicKey;
 public class C4ghService {
     private static final Logger log = LoggerFactory.getLogger(C4ghService.class);
 
-    private final Archive archive;
-    private final Outbox outbox;
+    private final ArchiveFileTransmitter archiveFileTransmitter;
+    private final OutboxFileTransmitter outboxFileTransmitter;
+    private final ExportStageSender stageSender;
 
-    public C4ghService(Archive archive, Outbox outbox) {
-        this.archive = archive;
-        this.outbox = outbox;
+    public C4ghService(ArchiveFileTransmitter archiveFileTransmitter, OutboxFileTransmitter outboxFileTransmitter, ExportStageSender stageSender) {
+        this.archiveFileTransmitter = archiveFileTransmitter;
+        this.outboxFileTransmitter = outboxFileTransmitter;
+        this.stageSender = stageSender;
     }
 
-    public void encryptionWithReceiverPublicKey(C4ghExportTask task, String privateKeyPath, String privateKeyPassword) throws IOException, GeneralSecurityException, DecoderException {
+    public void encryptionWithReceiverPublicKey(C4ghExportTask task, String privateKeyPath, String privateKeyPassword) {
         log.info("Begin encryption of header from task with id: {}", task.taskId());
-        InputStream file = archive.getFile(task.filePath());
-        PrivateKey privateKey = KeyUtils.getInstance().readPrivateKey(new File(privateKeyPath), privateKeyPassword.toCharArray());
-        PublicKey recipientPublicKey = KeyUtils.getInstance().readPublicKey(task.receiverPublicKey());
-        byte[] newHeader = Crypt4GHUtils.getInstance().setRecipient(Hex.decodeHex(task.header()), privateKey, recipientPublicKey).serialize();
+        stageSender.handleSend(new FileExportEvent(task.stableId(), task.username(), task.taskId(), ExportStage.RE_ENCRYPTION));
+
+        byte[] newHeader = encryptNewHeader(task, privateKeyPath, privateKeyPassword);
         log.info("Encryption of header has been finished for task with id: {}", task.taskId());
 
-        InputStream outboxFile = new SequenceInputStream(new ByteArrayInputStream(newHeader), file);
-
-        outbox.exportFile(outboxFile, task.taskId(), task.fileName(), task.username());
+        InputStream exportFile = getExportFile(task);
+        SequenceInputStream inputStream = new SequenceInputStream(new ByteArrayInputStream(newHeader), exportFile);
+        outboxFileTransmitter.exportFile(inputStream, task);
     }
 
+    private InputStream getExportFile(C4ghExportTask task) {
+        try {
+            return archiveFileTransmitter.getFile(task.filePath());
+        } catch (IOException e) {
+            stageSender.handleSend(new FileExportEvent(task.stableId(), task.username(), task.taskId(), ExportStage.FAILED));
+            log.error("Unable get file for task: {}", task);
+            throw new RuntimeException(e);
+        }
+    }
 
+    private byte[] encryptNewHeader(C4ghExportTask task, String privateKeyPath, String privateKeyPassword) {
+        try {
+            PrivateKey privateKey = KeyUtils.getInstance().readPrivateKey(new File(privateKeyPath), privateKeyPassword.toCharArray());
+            PublicKey recipientPublicKey = KeyUtils.getInstance().readPublicKey(task.receiverPublicKey());
+            return Crypt4GHUtils.getInstance().setRecipient(Hex.decodeHex(task.header()), privateKey, recipientPublicKey).serialize();
+        } catch (DecoderException | GeneralSecurityException | IOException e) {
+            stageSender.handleSend(new FileExportEvent(task.stableId(), task.username(), task.taskId(), ExportStage.FAILED));
+            log.error("Re-encryption has failed for task: {}", task);
+            throw new RuntimeException(e);
+        }
+    }
 }

@@ -2,6 +2,7 @@ package pl.lodz.uni.biobank.foam.c4ghfs;
 
 import io.minio.MinioClient;
 import org.springframework.amqp.rabbit.annotation.EnableRabbit;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.amqp.support.converter.Jackson2JsonMessageConverter;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
@@ -21,25 +22,34 @@ public class AppConfiguration {
 
     @Bean
     @ConditionalOnProperty(name = "outbox.type", havingValue = "posix")
-    public Outbox posixOutbox() {
-        return new PosixOutbox(outboxPath);
+    public OutboxFileTransmitter posixOutbox(ExportStageSender stageSender) {
+        return new PosixOutboxFileTransmitter(outboxPath, stageSender);
     }
 
     @Bean
     @ConditionalOnProperty(name = "archive.type", havingValue = "posix")
-    public Archive posixArchive() {
-        return new PosixArchive(archivePath);
+    public ArchiveFileTransmitter posixArchive() {
+        return new PosixArchiveFileTransmitter(archivePath);
     }
 
     @Bean
     @ConditionalOnProperty(name = "archive.type", havingValue = "s3")
-    public Archive s3Archive(MinioClient client) {
-        return new S3Archive(client, archivePath);
+    public ArchiveFileTransmitter s3Archive(MinioClient client) {
+        return new S3ArchiveFileTransmitter(client, archivePath);
     }
 
     @Bean
-    public C4ghService service(Archive archive, Outbox outbox) {
-        return new C4ghService(archive, outbox);
+    @ConditionalOnProperty(name = "archive.type", havingValue = "s3")
+    public MinioClient minioClient() {
+        return MinioClient.builder()
+                .endpoint(s3Endpoint)
+                .credentials(s3AccessKey, s3SecretKey)
+                .build();
+    }
+
+    @Bean
+    public C4ghService service(ArchiveFileTransmitter archiveFileTransmitter, OutboxFileTransmitter outboxFileTransmitter, ExportStageSender stageSender) {
+        return new C4ghService(archiveFileTransmitter, outboxFileTransmitter, stageSender);
     }
 
     @Bean
@@ -48,7 +58,7 @@ public class AppConfiguration {
     }
 
     @Bean
-    ListenerErrorHandler sdaListenerErrorHandler() {
+    public ListenerErrorHandler sdaListenerErrorHandler() {
         return new ListenerErrorHandler();
     }
 
@@ -58,11 +68,8 @@ public class AppConfiguration {
     }
 
     @Bean
-    public MinioClient minioClient() {
-        return MinioClient.builder()
-                .endpoint(s3Endpoint)
-                .credentials(s3AccessKey, s3SecretKey)
-                .build();
+    public ExportStageSender stageSender (RabbitTemplate template) {
+        return new ExportStageSender(template);
     }
 
 }
