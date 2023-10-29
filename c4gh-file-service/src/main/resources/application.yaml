@@ -32,3 +32,7 @@ archive:
 crypt4gh:
   private-key-path: ${C4GH_PRIVATE_KEY}
   private-key-password: ${C4GH_PRIVATE_KEY_PASSWORD}
+
+application:
+  export-file-stage:
+    routing-key: ${EXPORT_FILE_STAGE_ROUTING_KEY:export_stage_log}
