@@ -21,11 +21,11 @@ public class DatasetController {
     }
 
     @GetMapping("{datasetId}")
-    ResponseEntity<DatasetWithFilesResponse> getDatasetWithFiles(@PathVariable String datasetId, Authentication authentication) {
+    ResponseEntity<DatasetResponse> getDatasets(@PathVariable String datasetId, Authentication authentication) {
         String userName = (String) authentication.getPrincipal();
         log.info("User: {} query for dataset: {}", userName, datasetId);
-        
-        return ResponseEntity.ok(service.getDatasetWithFiles(datasetId, userName));
+
+        return ResponseEntity.ok(service.getDatasets(datasetId, userName));
     }
 
 }

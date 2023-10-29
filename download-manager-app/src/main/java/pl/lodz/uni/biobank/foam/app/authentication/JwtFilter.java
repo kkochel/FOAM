@@ -34,7 +34,9 @@ public class JwtFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         String authHeader = request.getHeader(AUTH_HEADER);
+
         if (authHeader != null && authHeader.startsWith(BEARER)) {
+//        if (authHeader != null && authHeader.startsWith(BEARER) && !"/api/auth/refresh-token".equals(request.getRequestURI())) {
             String token = getToken(authHeader);
             jwtService.validate(token);
             UserDetails user = userDetailsService.loadUserByUsername(jwtService.getUsername(token));

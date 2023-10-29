@@ -1,3 +1,7 @@
 databaseChangeLog:
   - include:
       file: db/changelog/init.sql
+  - include:
+      id: "2"
+      author: kkochel
+      file: db/changelog/file_export_log.sql

@@ -7,14 +7,14 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 @Service
-public class ExportSender {
-    private static final Logger log = LoggerFactory.getLogger(ExportSender.class);
+public class ExportMessageSender {
+    private static final Logger log = LoggerFactory.getLogger(ExportMessageSender.class);
 
     @Value("${application.export-file.routing-key}")
     private String routingKey;
     private final RabbitTemplate template;
 
-    public ExportSender(RabbitTemplate template) {
+    public ExportMessageSender(RabbitTemplate template) {
         this.template = template;
     }
 

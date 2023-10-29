@@ -13,18 +13,23 @@ import java.util.UUID;
 
 @Service
 public class ExportService {
-    private final ExportSender sender;
+    private final ExportMessageSender sender;
     private final PermissionService permissionService;
     private final DatasetService datasetService;
     private final CegaUserService userService;
+    private final FileExportLogService logService;
+    private final UserExportFileService exportFileService;
 
-    public ExportService(ExportSender sender, PermissionService permissionService, DatasetService datasetService, CegaUserService userService) {
+    public ExportService(ExportMessageSender sender, PermissionService permissionService, DatasetService datasetService, CegaUserService userService, FileExportLogService logService, UserExportFileService exportFileService) {
         this.sender = sender;
         this.permissionService = permissionService;
         this.datasetService = datasetService;
         this.userService = userService;
+        this.logService = logService;
+        this.exportFileService = exportFileService;
     }
 
+    //TODO refactor to remove coupling
     public void exportFile(String datasetId, String fileId, String username) {
         PermissionStatus datasetStatus = permissionService.datasetStatusForUser(datasetId, username);
 
@@ -34,7 +39,10 @@ public class ExportService {
 
         FileData file = datasetService.getFileById(fileId);
         CegaUserKey key = userService.getPublicC4ghKey(username);
+        UUID uuid = UUID.randomUUID();
+        logService.save(new FileExportLog(file.stableId(), username, uuid, ExportStage.ACCEPTED));
+        exportFileService.updateFileStage(file.stableId(), username, ExportStage.ACCEPTED);
 
-        sender.handleSend(new C4ghExportTask(UUID.randomUUID(), file.header(), file.archiveFilePath(), file.fileName(), key.getKey(), username));
+        sender.handleSend(new C4ghExportTask(uuid, file.header(), file.archiveFilePath(), file.fileName(), key.getKey(), username, file.stableId()));
     }
 }

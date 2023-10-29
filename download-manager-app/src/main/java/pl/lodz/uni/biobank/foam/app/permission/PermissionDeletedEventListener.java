@@ -7,12 +7,12 @@ import org.springframework.stereotype.Component;
 import pl.lodz.uni.biobank.foam.app.sda.api.PermissionDeletedMessage;
 
 @Component
-public class DatasetPermissionDeletedListener {
-    private static final Logger log = LoggerFactory.getLogger(DatasetPermissionDeletedListener.class);
+public class PermissionDeletedEventListener {
+    private static final Logger log = LoggerFactory.getLogger(PermissionDeletedEventListener.class);
 
     private final PermissionService service;
 
-    public DatasetPermissionDeletedListener(PermissionService service) {
+    public PermissionDeletedEventListener(PermissionService service) {
         this.service = service;
     }
 
