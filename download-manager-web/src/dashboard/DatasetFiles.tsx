@@ -13,7 +13,7 @@ interface Props {
 
 const confirmationMessage: string = "Please confirm that you intend to start the dataset export process."
 
-export const DatasetItem: FC<Props> = (props) => {
+export const DatasetFiles: FC<Props> = (props) => {
     const {dataset} = props
     const [confirmationDialog, setConfirmationDialog] = useState<boolean>(false)
     const [successNotification, setSuccessNotification] = useState(false);

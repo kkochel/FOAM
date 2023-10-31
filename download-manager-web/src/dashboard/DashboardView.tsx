@@ -1,4 +1,4 @@
-import {DatasetItem} from "./DatasetItem.tsx";
+import {DatasetFiles} from "./DatasetFiles.tsx";
 import {useParams} from "react-router-dom";
 import {useEffect, useState} from "react";
 import {DatasetStatus, fetchData} from "../common/consts.ts";
@@ -41,7 +41,7 @@ export const DashboardView = () => {
 
   return (
   <>
-    {dataset ? <DatasetItem dataset={dataset}/> : <div>There is no data to display</div>}
+    {dataset ? <DatasetFiles dataset={dataset}/> : <div>There is no data to display</div>}
   </>
   )
 }

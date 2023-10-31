@@ -1,5 +1,5 @@
 import {AuthenticatedHeader} from "../header/AuthenticatedHeader.tsx";
-import {Col, Container, Form, Nav, Row} from "react-bootstrap";
+import {Col, Form, Nav, Row} from "react-bootstrap";
 import {Link, Outlet} from "react-router-dom";
 import {useEffect, useState} from "react";
 import {fetchData} from "../common/consts.ts";
@@ -42,11 +42,11 @@ export const Dashboard = () => {
     }, [filterValue, dataset]);
 
     return (
-        <Container fluid className={"h-100"}>
+        <>
             <AuthenticatedHeader/>
-            <Row className={"h-100"}>
-                <Col xs={2}>
-                    <aside className={"h-100 border-with-shadow"}>
+            <Row id={"dashboard-row"} className={"h-100"}>
+                <Col id={"dashboard-aside-column"} xs={2}>
+                    <aside className={"h-100 border-with-shadow overflow-auto"}>
                         <h4 className={"mt-2"}>List of datasets</h4>
                         <Form style={{"paddingLeft": "2rem", "paddingRight": "2rem"}}>
                             <Form.Group style={{"textAlign": "left"}}>
@@ -68,14 +68,17 @@ export const Dashboard = () => {
                                         </Nav.Item>
                                     )
                                 })
-                                : null
+                                :
+                                <div style={{flex: "1 1 auto"}}>
+                                    <p>content (fills remaining space)</p>
+                                </div>
                             }
                         </Nav>
                     </aside>
                 </Col>
-                <Col><Outlet/></Col>
+                <Col ><Outlet/></Col>
             </Row>
 
-        </Container>
+        </>
     )
 }
