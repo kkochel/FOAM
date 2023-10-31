@@ -38,19 +38,12 @@ public class DatasetService {
     public DatasetResponse getDatasets(String datasetId, String username) {
         PermissionStatus status = permissionService.datasetStatusForUser(datasetId, username);
         Dataset dataset = repository.getWithFilesBy(datasetId);
-//        List<FilesResponse> files = dataset
-//                .getFiles()
-//                .stream()
-//                .map(f -> new FilesResponse(f.getStableId(), f.getDecryptedFileSize()))
-//                .sorted(Comparator.comparing(FilesResponse::stableId))
-//                .toList();
-
-//        return new DatasetResponse(dataset.getStableId(), dataset.getTitle(), dataset.getDescription(), files, status.label);
         return new DatasetResponse(dataset.getStableId(), dataset.getTitle(), dataset.getDescription(), status.label);
     }
 
-    public FileData getFileById(String stableId) {
-        DatasetFile file = fileRepository.getFile(stableId);
+    public FileData getFileById(String datasetID, String fileId, String username) throws DatasetAccessDeniedException {
+        checkPermission(datasetID, username);
+        DatasetFile file = fileRepository.getFile(fileId);
         return new FileData(file.getStableId(), file.getFileName(), file.getArchiveFilePath(), file.getArchiveFileSize(), file.getDecryptedFileSize(), file.getHeader());
     }
 
@@ -61,6 +54,18 @@ public class DatasetService {
                 .toList();
 
         userExportFileEventPublisher.handle(list);
+    }
+
+    public Dataset getDataset(String datasetID, String username) throws DatasetAccessDeniedException {
+        checkPermission(datasetID, username);
+        return repository.getWithFilesBy(datasetID);
+    }
+
+    private void checkPermission(String datasetId, String username) throws DatasetAccessDeniedException {
+        PermissionStatus permissionStatus = permissionService.datasetStatusForUser(datasetId, username);
+        if (PermissionStatus.REVOKED.equals(permissionStatus)) {
+            throw new DatasetAccessDeniedException(String.format("User: %s try get access to dataset: %s", username, datasetId));
+        }
     }
 
 }

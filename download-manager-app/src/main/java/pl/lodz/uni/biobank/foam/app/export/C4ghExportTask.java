@@ -9,6 +9,7 @@ public record C4ghExportTask(
         String fileName,
         String receiverPublicKey,
         String username,
-        String stableId
+        String fileId,
+        String datasetId
 ) {
 }

@@ -28,6 +28,9 @@ public class ExportController {
 
     @PostMapping("datasets/{stableId}")
     ResponseEntity<DatasetResponse> exportDataset(@PathVariable String stableId, Authentication authentication) {
+        String userName = (String) authentication.getPrincipal();
+        log.info("User: {} ordered the export of the dataset: {}", userName, stableId);
+        exportService.tryExportDataset(stableId, userName);
         return ResponseEntity.ok().build();
     }
 
@@ -49,7 +52,7 @@ public class ExportController {
         String userName = (String) authentication.getPrincipal();
         log.info("User: {} ordered the export of the file: {}", userName, request.stableId());
 
-        exportService.exportFile(datasetId, request.stableId(), (String) authentication.getPrincipal());
+        exportService.tryExportFile(datasetId, request.stableId(), userName);
         return ResponseEntity.ok().build();
     }
 
