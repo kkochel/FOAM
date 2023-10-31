@@ -1,14 +1,22 @@
 import './App.css'
-import {Container} from "react-bootstrap";
-import {Home} from "./home/Home.tsx";
+import {useEffect} from "react";
+import {removeRefreshTokenIfExpired} from "./main.tsx";
+import {Header} from "./header/Header.tsx";
+import {HomeContent} from "./home/HomeContent.tsx";
 
 function App() {
 
+    useEffect(() => {
+        removeRefreshTokenIfExpired()
+    }, []);
+
     return (
-        <Container fluid className={"h-100"}>
-            <Home/>
-        </Container>
+        <>
+            <Header/>
+            <HomeContent/>
+        </>
     )
+
 }
 
 export default App

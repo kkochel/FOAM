@@ -14,6 +14,8 @@ import './assets/custom.scss'
 import {AuthProvider} from "./auth/AuthProvider.tsx";
 import {AppSettings} from "./api/AppSettings.ts";
 import {jwtDecode} from "jwt-decode";
+import {Footer} from "./common/Footer.tsx";
+import {Container} from "react-bootstrap";
 
 export const axiosClient = axios.create({
     baseURL: AppSettings.DOMAIN,
@@ -47,12 +49,19 @@ const addMinutes = (date: Date, minutes: number): Date => {
     return date;
 }
 
-const isTokenExpired = (): boolean | undefined => {
-    const token: string | null = localStorage.getItem("token")
+export const removeRefreshTokenIfExpired = () => {
+    if (isTokenExpired(localStorage.getItem("refreshToken"))) {
+        localStorage.removeItem("token")
+        localStorage.removeItem("refreshToken")
+        window.location.href = '/';
+    }
+}
+
+const isTokenExpired = (token: string | null, shift: number = 0): boolean | undefined => {
     if (token) {
         const decoded = jwtDecode(token)
         if (decoded.iat) {
-            const nextTwoMinutes: Date = addMinutes(new Date(), 2)
+            const nextTwoMinutes: Date = addMinutes(new Date(), shift)
             return nextTwoMinutes.getMilliseconds() > decoded.iat
         }
     }
@@ -63,7 +72,7 @@ axiosClient.interceptors.response.use(async (response) => {
 }, function (error) {
     const originalConfig = error.config;
 
-    if (isTokenExpired()) {
+    if (isTokenExpired(localStorage.getItem("token"), 2)) {
         refreshAccessToken();
     }
 
@@ -118,8 +127,11 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
     <React.StrictMode>
         <AuthProvider>
             <QueryClientProvider client={queryClient}>
-                <RouterProvider router={router}/>
-                <ReactQueryDevtools initialIsOpen={false}/>
+                <Container fluid className={"h-100"}>
+                    <RouterProvider router={router}/>
+                    <ReactQueryDevtools initialIsOpen={false}/>
+                </Container>
+                <Footer/>
             </QueryClientProvider>
         </AuthProvider>
     </React.StrictMode>,
