@@ -37,12 +37,24 @@ public class ExportService {
             throw new AccessDeniedException(String.format("User %s lost permission to export dataset %s", username, fileId));
         }
 
-        FileData file = datasetService.getFileById(fileId);
-        CegaUserKey key = userService.getPublicC4ghKey(username);
         UUID uuid = UUID.randomUUID();
+        FileData file = datasetService.getFileById(fileId);
+        String key = getCegaUserKey(username, file.stableId(), uuid);
         logService.save(new FileExportLog(file.stableId(), username, uuid, ExportStage.ACCEPTED));
         exportFileService.updateFileStage(file.stableId(), username, ExportStage.ACCEPTED);
 
-        sender.handleSend(new C4ghExportTask(uuid, file.header(), file.archiveFilePath(), file.fileName(), key.getKey(), username, file.stableId()));
+        sender.handleSend(new C4ghExportTask(uuid, file.header(), file.archiveFilePath(), file.fileName(), key, username, file.stableId()));
+    }
+
+    private String getCegaUserKey(String username, String fileId, UUID uuid) {
+        try {
+            return userService.getPublicC4ghKey(username).getKey();
+        } catch (RuntimeException e) {
+            logService.save(new FileExportLog(fileId, username, uuid, ExportStage.ACCEPTED));
+            exportFileService.updateFileStage(fileId, username, ExportStage.ACCEPTED);
+
+            throw new MissingC4ghUserPublicKeyException(e);
+        }
+
     }
 }

@@ -16,10 +16,9 @@ public class CegaUserController {
     }
 
 
-    @GetMapping("full-name")
-    ResponseEntity<HeaderResponse> getFullUsername(Authentication authentication) {
-        HeaderResponse response = new HeaderResponse(service.getUserFullName((String) authentication.getPrincipal()));
-        return ResponseEntity.ok(response);
+    @GetMapping("info")
+    ResponseEntity<UserData> getFullUsername(Authentication authentication) {
+        return ResponseEntity.ok(service.getUserData(authentication));
     }
 
 }

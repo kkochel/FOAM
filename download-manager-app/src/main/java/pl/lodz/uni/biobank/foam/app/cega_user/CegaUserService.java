@@ -2,6 +2,7 @@ package pl.lodz.uni.biobank.foam.app.cega_user;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import pl.lodz.uni.biobank.foam.app.sda.api.CegaUserMessage;
@@ -28,7 +29,15 @@ public class CegaUserService {
         log.info("User cega event processed correctly. Username: {} ", event.username());
     }
 
-    public String getUserFullName(String username) {
+    public UserData getUserData(Authentication authentication) {
+        String username = (String) authentication.getPrincipal();
+        boolean keyPresent = !getPublicC4ghKey(username).getKey().isEmpty();
+        String fullName = getUserFullName(username);
+
+        return new UserData(fullName, keyPresent);
+    }
+
+    private String getUserFullName(String username) {
         return cegaUserRepository
                 .findByUsername(username)
                 .map(CegaUser::getFullName)
