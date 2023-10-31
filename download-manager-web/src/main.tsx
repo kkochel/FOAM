@@ -53,7 +53,6 @@ export const removeRefreshTokenIfExpired = () => {
     if (isTokenExpired(localStorage.getItem("refreshToken"))) {
         localStorage.removeItem("token")
         localStorage.removeItem("refreshToken")
-        window.location.href = '/';
     }
 }
 
@@ -61,8 +60,7 @@ const isTokenExpired = (token: string | null, shift: number = 0): boolean | unde
     if (token) {
         const decoded = jwtDecode(token)
         if (decoded.iat) {
-            const nextTwoMinutes: Date = addMinutes(new Date(), shift)
-            return nextTwoMinutes.getMilliseconds() > decoded.iat
+            return addMinutes(new Date(), shift).getTime().valueOf() / 1000 > decoded.iat
         }
     }
 }
