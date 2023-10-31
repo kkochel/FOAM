@@ -22,47 +22,41 @@ public class PosixOutboxFileTransmitter implements OutboxFileTransmitter {
 
     @Override
     public void exportFile(InputStream outboxFile, C4ghExportTask task) {
-        String username = task.username();
         String fileName = task.fileName();
-        UUID taskId = task.taskId();
 
-        File file = new File(archivePath + "/" + username + "/" + new File(fileName).getName());
+        File file = new File(archivePath + "/" + task.username() + "/" + task.datasetId() + "/" + new File(fileName).getName());
         if (!file.exists()) {
             copyFileFromArchiveToOutbox(outboxFile, task, file);
         } else {
-            log.info("File with name {} already exist. End task with id: {}", fileName, taskId);
+            log.info("File with name {} already exist. End task with id: {}", fileName, task.taskId());
         }
 
         closeStream(outboxFile, task);
     }
 
     private void closeStream(InputStream outboxFile,C4ghExportTask task)  {
-        String username = task.username();
         UUID taskId = task.taskId();
-        String stableId = task.stableId();
 
         try {
             outboxFile.close();
         } catch (IOException e) {
-            stageSender.handleSend(new FileExportEvent(task.stableId(), task.username(), task.taskId(), ExportStage.FAILED));
+            stageSender.handleSend(new FileExportEvent(task.fileId(), task.username(), task.taskId(), ExportStage.FAILED));
             log.error("Unable to close stream for task: {}", task);
             throw new RuntimeException(e);
         }
         log.info("End copy file to outbox of file from task with id: {}", taskId);
-        stageSender.handleSend(new FileExportEvent(stableId, username, taskId, ExportStage.READY));
+        stageSender.handleSend(new FileExportEvent(task.fileId(), task.username(), taskId, ExportStage.READY));
     }
 
     private void copyFileFromArchiveToOutbox(InputStream outboxFile, C4ghExportTask task, File file) {
-        String username = task.username();
         UUID taskId = task.taskId();
-        String stableId = task.stableId();
 
         log.info("Begin copy file to outbox of file from task with id: {}", taskId);
-        stageSender.handleSend(new FileExportEvent(stableId, username, taskId, ExportStage.TRANSFER));
+        stageSender.handleSend(new FileExportEvent(task.fileId(), task.username(), taskId, ExportStage.TRANSFER));
         try {
             FileUtils.copyToFile(outboxFile, file);
         } catch (IOException e) {
-            stageSender.handleSend(new FileExportEvent(task.stableId(), task.username(), task.taskId(), ExportStage.FAILED));
+            stageSender.handleSend(new FileExportEvent(task.fileId(), task.username(), task.taskId(), ExportStage.FAILED));
             log.error("Unable to copy file for task: {}", task);
             throw new RuntimeException(e);
         }

@@ -27,7 +27,7 @@ public class C4ghService {
 
     public void encryptionWithReceiverPublicKey(C4ghExportTask task, String privateKeyPath, String privateKeyPassword) {
         log.info("Begin encryption of header from task with id: {}", task.taskId());
-        stageSender.handleSend(new FileExportEvent(task.stableId(), task.username(), task.taskId(), ExportStage.RE_ENCRYPTION));
+        stageSender.handleSend(new FileExportEvent(task.fileId(), task.username(), task.taskId(), ExportStage.RE_ENCRYPTION));
 
         byte[] newHeader = encryptNewHeader(task, privateKeyPath, privateKeyPassword);
         log.info("Encryption of header has been finished for task with id: {}", task.taskId());
@@ -41,7 +41,7 @@ public class C4ghService {
         try {
             return archiveFileTransmitter.getFile(task.filePath());
         } catch (IOException e) {
-            stageSender.handleSend(new FileExportEvent(task.stableId(), task.username(), task.taskId(), ExportStage.FAILED));
+            stageSender.handleSend(new FileExportEvent(task.fileId(), task.username(), task.taskId(), ExportStage.FAILED));
             log.error("Unable get file for task: {}", task);
             throw new RuntimeException(e);
         }
@@ -53,7 +53,7 @@ public class C4ghService {
             PublicKey recipientPublicKey = KeyUtils.getInstance().readPublicKey(task.receiverPublicKey());
             return Crypt4GHUtils.getInstance().setRecipient(Hex.decodeHex(task.header()), privateKey, recipientPublicKey).serialize();
         } catch (DecoderException | GeneralSecurityException | IOException e) {
-            stageSender.handleSend(new FileExportEvent(task.stableId(), task.username(), task.taskId(), ExportStage.FAILED));
+            stageSender.handleSend(new FileExportEvent(task.fileId(), task.username(), task.taskId(), ExportStage.FAILED));
             log.error("Re-encryption has failed for task: {}", task);
             throw new RuntimeException(e);
         }
