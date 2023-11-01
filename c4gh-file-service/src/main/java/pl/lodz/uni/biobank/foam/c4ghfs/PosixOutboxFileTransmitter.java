@@ -22,9 +22,9 @@ public class PosixOutboxFileTransmitter implements OutboxFileTransmitter {
 
     @Override
     public void exportFile(InputStream outboxFile, C4ghExportTask task) {
-        String fileName = task.fileName();
+        String fileName = task.fileId();
 
-        File file = new File(archivePath + "/" + task.username() + "/" + task.datasetId() + "/" + new File(fileName).getName());
+        File file = new File(archivePath + "/" + task.username() + "/" + task.datasetId() + "/" + fileName + ".c4gh");
         if (!file.exists()) {
             copyFileFromArchiveToOutbox(outboxFile, task, file);
         } else {
@@ -34,7 +34,7 @@ public class PosixOutboxFileTransmitter implements OutboxFileTransmitter {
         closeStream(outboxFile, task);
     }
 
-    private void closeStream(InputStream outboxFile,C4ghExportTask task)  {
+    private void closeStream(InputStream outboxFile, C4ghExportTask task) {
         UUID taskId = task.taskId();
 
         try {
