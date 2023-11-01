@@ -40,7 +40,7 @@ export const DatasetFilesHeader: FC<Props> = (props) => {
             <h4 className={"mt-2"}>{datasetId}</h4>
             <Button variant={"outline-primary"}
                     onClick={() => setConfirmationDialog(true)}
-                    className={"m-3"}
+                    className={"mt-2"}
                     disabled={disableExportButton(status)}>Export all files to outbox</Button>
             <ConfirmationDialog showConfirmation={confirmationDialog}
                                 onHideConfirmation={setConfirmationDialog}

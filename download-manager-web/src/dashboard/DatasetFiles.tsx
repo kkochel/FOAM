@@ -1,6 +1,6 @@
 import {FC, Fragment, useEffect, useState} from "react";
 import {Dataset, DatasetFile} from "./DashboardView.tsx";
-import {Col, Container, Row} from "react-bootstrap";
+import {Col, Container, Form, Row} from "react-bootstrap";
 import {fetchData} from "../common/consts.ts";
 import {DatasetFileItemCard} from "./DatasetFileItemCard.tsx";
 import {useQuery} from "@tanstack/react-query";
@@ -13,6 +13,8 @@ interface Props {
 export const DatasetFiles: FC<Props> = (props) => {
     const {dataset} = props
     const [files, setFiles] = useState<DatasetFile[]>()
+    const [filteredFiles, setFilteredFiles] = useState<DatasetFile[]>()
+    const [filterValue, setFilterValue] = useState<string>()
 
     const href: string = `/api/export/datasets/${dataset.stableId}/files`
 
@@ -27,11 +29,33 @@ export const DatasetFiles: FC<Props> = (props) => {
         }
     }, [data]);
 
+    useEffect(() => {
+        if (files && filterValue) {
+            const filtered = files.filter(file =>
+                file.stableId.toLowerCase().includes(filterValue.toLowerCase()) ||
+                file.lastStage.toLowerCase().includes(filterValue.toLowerCase()))
+            setFilteredFiles(filtered)
+        } else {
+            setFilteredFiles(files)
+        }
+    }, [filterValue, files]);
+
     return (
-        <Container className={"border-with-shadow"}>
+        <Container className={"border-with-shadow bg-white"}>
             <DatasetFilesHeader datasetId={dataset.stableId} status={dataset.status}/>
-            <Row xs={1} md={2} className="overflow-auto" style={{maxHeight: '75vh'}}>
-                {files && files.map((value, index) => {
+            <Form className={"m-2"}>
+                <Form.Group style={{"textAlign": "left"}}>
+                    <Form.Label htmlFor={"file-search"}>Search file</Form.Label>
+                    <Form.Control id={"file-search"}
+                                  className={"border-black border-2"}
+                                  type={"text"}
+                                  placeholder={"Filter by file id or current status"}
+                                  onChange={event => setFilterValue(event.target.value)}
+                    />
+                </Form.Group>
+            </Form>
+            <Row xs={1} md={2} className="overflow-auto" style={{maxHeight: '70vh'}}>
+                {filteredFiles && filteredFiles.map((value, index) => {
                     return <Fragment key={index}>
                         <Col>
                             <DatasetFileItemCard
