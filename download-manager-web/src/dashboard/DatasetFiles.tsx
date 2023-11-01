@@ -20,7 +20,8 @@ export const DatasetFiles: FC<Props> = (props) => {
 
     const {data} = useQuery({
         queryKey: ["dataset-files", dataset.stableId],
-        queryFn: () => fetchData<DatasetFile[]>(href)
+        queryFn: () => fetchData<DatasetFile[]>(href),
+        refetchInterval: 20000
     })
 
     useEffect(() => {

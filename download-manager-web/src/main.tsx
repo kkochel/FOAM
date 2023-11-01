@@ -93,7 +93,7 @@ axiosClient.interceptors.response.use(async (response) => {
 const queryClient = new QueryClient({
     defaultOptions: {
         queries: {
-            staleTime: 300000,
+            staleTime: 60000,
         },
     },
 })
