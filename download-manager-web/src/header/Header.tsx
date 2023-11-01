@@ -21,7 +21,7 @@ export const Header: FC = () => {
                          className="d-inline-block align-top" alt="Genomic Map of Poland logo"/>
 
                 <Navbar.Collapse className="justify-content-end">
-                    <Link to={"/sing-in"}>
+                    <Link to={"/sign-in"}>
                         <Button variant={"outline-primary"}>Sign in</Button></Link>
                 </Navbar.Collapse>
             </Navbar>

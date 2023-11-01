@@ -16,6 +16,7 @@ import {AppSettings} from "./api/AppSettings.ts";
 import {jwtDecode} from "jwt-decode";
 import {Footer} from "./common/Footer.tsx";
 import {Container} from "react-bootstrap";
+import {PrivateRoute} from "./auth/PrivateRoute.tsx";
 
 export const axiosClient = axios.create({
     baseURL: AppSettings.DOMAIN,
@@ -56,7 +57,7 @@ export const removeRefreshTokenIfExpired = () => {
     }
 }
 
-const isTokenExpired = (token: string | null, shift: number = 0): boolean | undefined => {
+export const isTokenExpired = (token: string | null, shift: number = 0): boolean | undefined => {
     if (token) {
         const decoded = jwtDecode(token)
         if (decoded.iat) {
@@ -82,7 +83,7 @@ axiosClient.interceptors.response.use(async (response) => {
     if (error.response.status === 401 && localStorage.getItem("refreshToken")) {
         localStorage.removeItem("token")
         localStorage.removeItem("refreshToken")
-        window.location.href = '/sing-in';
+        window.location.href = '/sign-in';
     }
 
     return Promise.reject(error);
@@ -104,18 +105,23 @@ const router = createBrowserRouter([
         errorElement: <ErrorPage/>
     },
     {
-        path: "/sing-in",
+        path: "/sign-in",
         element: <SignIn/>,
         errorElement: <ErrorPage/>
     },
     {
         path: "/dashboard",
-        element: <Dashboard/>,
+        element:
+            <PrivateRoute>
+                <Dashboard/>
+            </PrivateRoute>
+        ,
         errorElement: <ErrorPage/>,
         children: [
             {
                 path: "/dashboard/datasets/:datasetId",
-                element: <DashboardView/>
+                element: <DashboardView/>,
+                errorElement: <ErrorPage/>
             }
         ]
     },
