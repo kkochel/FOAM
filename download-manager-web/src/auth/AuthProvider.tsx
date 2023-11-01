@@ -45,11 +45,6 @@ export interface SingInRequest {
     password: string
 }
 
-export interface SignInResponse {
-    token: string
-    refreshToken: string
-}
-
 interface AuthProviderProps {
     children?: ReactNode
 }

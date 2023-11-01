@@ -6,13 +6,7 @@ body {
     overflow: hidden;
 }
 
-footer {
-    margin-left: 1rem;
-    margin-right: 1rem;
-}
-
 .border-with-shadow {
-    /*background-color: #f7f7f7;*/
     border: solid 2px #155177;
     border-radius: 5px;
     flex-direction: column;
@@ -30,8 +24,6 @@ footer {
 }
 
 #root {
-    /*margin: 0 auto;*/
-    /*padding: 1rem;*/
     text-align: center;
     height: 100%;
 }
