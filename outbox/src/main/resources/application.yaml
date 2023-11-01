@@ -1,0 +1,23 @@
+spring:
+  rabbitmq:
+    host: ${BROKER_HOST:172.16.239.4}
+    port: ${BROKER_PORT:5671}
+    username: ${BROKER_USERNAME:guest}
+    password: ${BROKER_PASSWORD:guest}
+    virtual-host: ${BROKER_VHOST:sda}
+    ssl:
+      enabled: ${BROKER_SSL:true}
+      algorithm: TLSv1.2
+      key-store: file:${KEYSTORE_PATH:/opt/certs/client/keystore.p12}
+      key-store-type: ${KEYSTORE_TYPE:PKCS12}
+      key-store-password: ${KEYSTORE_PASSWORD:changeit}
+
+application:
+  port: ${OUTBOX_PORT:4444}
+  keypair: ${OUTBOX_KEYPAIR:}
+  local.directory: ${OUTBOX_LOCATION:/ega/outbox/}
+  cega:
+    endpoint: ${CEGA_ENDPOINT:http://localhost:9100/username/%s}
+    credentials: ${CEGA_ENDPOINT_CREDS}
+  export-file-stage:
+    routing-key: ${EXPORT_FILE_STAGE_ROUTING_KEY:export_stage_log}

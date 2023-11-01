@@ -1,0 +1,38 @@
+{
+  "properties": [
+    {
+      "name": "application.port",
+      "type": "java.lang.String",
+      "description": "Description for application.port."
+    },
+    {
+      "name": "application.keypair",
+      "type": "java.lang.String",
+      "description": "Description for application.keypair."
+    },
+    {
+      "name": "application.local.directory",
+      "type": "java.lang.String",
+      "description": "Description for application.local.directory."
+    },
+    {
+      "name": "application.cega.endpoint",
+      "type": "java.lang.String",
+      "description": "Description for application.cega.endpoint."
+    },
+    {
+      "name": "application.cega.credentials",
+      "type": "java.lang.String",
+      "description": "Description for application.cega.credentials."
+    },
+    {
+      "name": "application.mq.exchange",
+      "type": "java.lang.String",
+      "description": "Description for application.mq.exchange."
+    },
+    {
+      "name": "application.mq.routing-key",
+      "type": "java.lang.String",
+      "description": "Description for application.mq.routing-key."
+    }
+  ] }
