@@ -9,7 +9,7 @@ export const Header: FC = () => {
     return (
         <div id={"header"}>
             <Navbar>
-                <Navbar.Brand href="https://ega-archive.org/federated">
+                <Navbar.Brand href="https://ega-archive.org/about/projects-and-funders/federated-ega/">
                     <img src={fegaLogo}
                          width={"190px"}
                          height={"75px"}
