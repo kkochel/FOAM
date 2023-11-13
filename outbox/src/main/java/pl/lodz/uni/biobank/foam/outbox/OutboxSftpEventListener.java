@@ -60,7 +60,7 @@ public class OutboxSftpEventListener implements SftpEventListener {
     @Override
     public void removed(ServerSession session, Path path, boolean isDirectory, Throwable thrown) {
         log.info("User {} removed entry: {}", session.getUsername(), path);
-        fileStatusService.processFile(REMOVE, session.getUsername(), path);
+        fileStatusService.removeFile(session.getUsername(), path);
     }
 
     @Override

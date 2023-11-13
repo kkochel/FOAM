@@ -7,8 +7,6 @@ import org.springframework.stereotype.Service;
 import java.io.File;
 import java.nio.file.Path;
 
-import static pl.lodz.uni.biobank.foam.outbox.Operation.REMOVE;
-
 @Service
 public class FileStatusService {
     private static final Logger log = LoggerFactory.getLogger(FileStatusService.class);
@@ -19,14 +17,10 @@ public class FileStatusService {
         this.fileStatusSender = fileStatusSender;
     }
 
-    public void processFile(Operation operation, String username, Path dstPath) {
+    public void removeFile(String username, Path dstPath) {
         File file = dstPath.toFile();
-        log.info("File {} affected by user {}. Operation type: {}", dstPath, username, operation.name());
-        if (REMOVE.equals(operation)) {
-            FileExportMessage fem = new FileExportMessage(file.getName(), username, null, ExportStage.DELETED);
-            fileStatusSender.handleSend(fem);
-        }
-
-        throw new UnsupportedOperationException(String.format("Operation type: %s is not supported", operation.name()));
+        log.info("File {} affected by user {}. Operation type: {}", dstPath, username, Operation.REMOVE.name());
+        FileExportMessage fem = new FileExportMessage(file.getName(), username, null, ExportStage.DELETED);
+        fileStatusSender.handleSend(fem);
     }
 }
