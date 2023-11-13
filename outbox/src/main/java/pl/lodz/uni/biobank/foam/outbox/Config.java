@@ -1,6 +1,7 @@
 package pl.lodz.uni.biobank.foam.outbox;
 
 
+import org.springframework.amqp.support.converter.Jackson2JsonMessageConverter;
 import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.EnableCaching;
@@ -31,5 +32,10 @@ public class Config {
     @Scheduled(cron = "0 0 0 * * *")
     public void clearUsersCache() {
 //    FIXME
+    }
+
+    @Bean
+    public Jackson2JsonMessageConverter producerJackson2MessageConverter() {
+        return new Jackson2JsonMessageConverter();
     }
 }
