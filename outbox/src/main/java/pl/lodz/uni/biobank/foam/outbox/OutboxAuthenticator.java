@@ -54,6 +54,7 @@ public class OutboxAuthenticator implements PublickeyAuthenticator, PasswordAuth
 
         if (credentials.publicKey() == null) {
             log.error("Key from credentials for user {} is empty", username);
+            return false;
         }
 
         List<String> keysList = credentials.publicKey();

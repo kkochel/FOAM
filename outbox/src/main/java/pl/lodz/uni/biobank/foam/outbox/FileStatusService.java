@@ -22,7 +22,7 @@ public class FileStatusService {
     public void processFile(Operation operation, String username, Path dstPath) {
         File file = dstPath.toFile();
         log.info("File {} affected by user {}. Operation type: {}", dstPath, username, operation.name());
-        if (REMOVE == operation) {
+        if (REMOVE.equals(operation)) {
             FileExportMessage fem = new FileExportMessage(file.getName(), username, null, ExportStage.DELETED);
             fileStatusSender.handleSend(fem);
         }
