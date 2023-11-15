@@ -30,7 +30,7 @@ application:
   allowed-origins: ${ALLOWED_ORIGINS:http://localhost:5173/}
   jwt:
     secret-key: ${JWT_SECRET_KEY:12341234123412341234123412341234123412341234123412341234123412341234123412341234123412341234123412341234}
-    expiration: ${JWT_EXPIRATION:3600000} # an hour in milliseconds
+    expiration: ${JWT_EXPIRATION:900000} # an 15 minutes in milliseconds
     refresh-token:
       expiration: ${JWT_REFRESH_TOKEN:10800000} # a day in milliseconds
   export-file:
@@ -39,4 +39,4 @@ application:
 logging:
   level:
     org.springframework.security: ${SECURITY_LOGGING_LEVEL:error}
-    org.springframework.web: ${WEB_LOGGING_LEVEL:info}
+    org.springframework.web: ${WEB_LOGGING_LEVEL:error}

@@ -1,13 +1,12 @@
 package pl.lodz.uni.biobank.foam.app.authentication;
 
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("api/auth")
@@ -21,20 +20,24 @@ public class AuthController {
     }
 
     @PostMapping("sign-in")
-    public ResponseEntity<AuthenticationResponse> signIn(@RequestBody SignInRequest request) {
+    public ResponseEntity<HttpStatus> signIn(@RequestBody SignInRequest request, HttpServletResponse response) {
         log.info("Handle signIn: " + request.username());
-        AuthenticationResponse response = service.authenticate(request);
+        AuthenticationResponse res = service.authenticate(request);
+        response.addCookie(res.token());
+        response.addCookie(res.refreshToken());
 
         log.info("SignIn response for: {} is: {}", request.username(), HttpStatus.OK);
-        return ResponseEntity.ok(response);
+        return ResponseEntity.status(HttpStatus.OK).build();
     }
 
     @PostMapping("refresh-token")
-    public ResponseEntity<AuthenticationResponse> refreshToken(@RequestBody RefreshTokenQuery refreshTokenQuery) {
-        AuthenticationResponse response = service.refreshToken(refreshTokenQuery);
+    public ResponseEntity<HttpStatus> refreshToken(@CookieValue("refreshToken") String refreshToken, HttpServletResponse response) {
+        AuthenticationResponse res = service.refreshToken(refreshToken);
+        response.addCookie(res.token());
+        response.addCookie(res.refreshToken());
 
         log.info("Token refreshed");
-        return ResponseEntity.ok(response);
+        return ResponseEntity.status(HttpStatus.OK).build();
     }
 
 }

@@ -4,6 +4,7 @@ import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+import jakarta.servlet.http.Cookie;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -21,16 +22,19 @@ public class JwtService {
     @Value("${application.jwt.refresh-token.expiration}")
     private long refreshExpiration;
 
+    private final String refreshTokenName = "refreshToken";
+    private final String tokenName = "token";
+
 
     public AuthenticationResponse generateTokens(Authentication authenticate) {
         UserDetailsImpl user = (UserDetailsImpl) authenticate.getPrincipal();
-        return new AuthenticationResponse(generateToken(user, jwtExpiration), generateToken(user, refreshExpiration));
+        return new AuthenticationResponse(generateCookie(user, jwtExpiration, tokenName), generateCookie(user, refreshExpiration, refreshTokenName));
     }
 
     public AuthenticationResponse refreshToken(String refreshToken) {
         validate(refreshToken);
         String username = getUsername(refreshToken);
-        return new AuthenticationResponse(generateToken(username, jwtExpiration), generateToken(username, refreshExpiration));
+        return new AuthenticationResponse(generateCookie(username, jwtExpiration, tokenName), generateCookie(username, refreshExpiration, refreshTokenName));
     }
 
     public void validate(String token) {
@@ -41,7 +45,7 @@ public class JwtService {
         try {
             Jwts.parser().verifyWith(key()).build().parse(token);
         } catch (JwtException e) {
-            throw new JwtTokenExpiredException(e);
+            throw new RuntimeException(e);
         }
     }
 
@@ -52,8 +56,17 @@ public class JwtService {
                 .getSubject();
     }
 
-    private String generateToken(UserDetails userDetails, long jwtExpiration) {
-        return generateToken(userDetails.getUsername(), jwtExpiration);
+    private Cookie generateCookie(UserDetails userDetails, long jwtExpiration, String name) {
+        return generateCookie(userDetails.getUsername(), jwtExpiration, name);
+    }
+
+    private Cookie generateCookie(String userName, long jwtExpiration, String name) {
+        Cookie cookie = new Cookie(name, generateToken(userName, jwtExpiration));
+        cookie.setSecure(true);
+        cookie.setHttpOnly(true);
+        cookie.setMaxAge((int) jwtExpiration / 1000);
+        cookie.setPath("/");
+        return cookie;
     }
 
     private String generateToken(String username, long jwtExpiration) {

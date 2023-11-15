@@ -23,7 +23,7 @@ public class AuthService {
         return jwtService.generateTokens(authenticate);
     }
 
-    public AuthenticationResponse refreshToken(RefreshTokenQuery refreshTokenQuery) {
-        return jwtService.refreshToken(refreshTokenQuery.refreshToken());
+    public AuthenticationResponse refreshToken(String refreshToken) {
+        return jwtService.refreshToken(refreshToken);
     }
 }

@@ -1,4 +1,6 @@
 package pl.lodz.uni.biobank.foam.app.authentication;
 
-public record AuthenticationResponse(String token, String refreshToken) {
+import jakarta.servlet.http.Cookie;
+
+public record AuthenticationResponse(Cookie token, Cookie refreshToken) {
 }
