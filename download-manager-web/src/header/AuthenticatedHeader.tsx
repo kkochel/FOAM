@@ -13,7 +13,7 @@ interface HeaderResponse {
 }
 
 export const AuthenticatedHeader: FC = () => {
-    const {handleSignOut, setToken} = useContext(AuthContext)
+    const {handleSignOut, setAuthenticated} = useContext(AuthContext)
     const [userState, setUserState] = useState<HeaderResponse>()
 
     const href = "/api/cega-users/info";
@@ -51,7 +51,7 @@ export const AuthenticatedHeader: FC = () => {
                                 Signed in as: {userState.fullName}
                             </Navbar.Text>
                             <Button variant={"outline-primary"} className={"ms-4"}
-                                    onClick={() => handleSignOut(setToken, navigate)}>Sign out</Button>
+                                    onClick={() => handleSignOut(setAuthenticated, navigate)}>Sign out</Button>
                         </Navbar.Collapse>
                     </Navbar>
 

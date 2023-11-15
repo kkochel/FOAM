@@ -2,42 +2,40 @@ import {createContext, Dispatch, FC, ReactNode, SetStateAction, useState} from "
 import {NavigateFunction} from "react-router-dom";
 import {axiosClient} from "../main.tsx";
 
-const handleSignOut = (setToken: Dispatch<SetStateAction<string | null>>, navigate: NavigateFunction,) => {
-    localStorage.removeItem("token")
-    localStorage.removeItem("refreshToken")
-    setToken(null)
+const handleSignOut = (setAuthenticated: Dispatch<SetStateAction<boolean>>, navigate: NavigateFunction,) => {
+    setAuthenticated(false)
     navigate("/")
 }
 
-const handleSignIn = (setToken: Dispatch<SetStateAction<string | null>>, navigate: NavigateFunction, request: SingInRequest): Promise<number> => {
-    return  axiosClient.post("/api/auth/sign-in", request)
+const handleSignIn = (setAuthenticated: Dispatch<SetStateAction<boolean>>, navigate: NavigateFunction, request: SingInRequest): Promise<number> => {
+    return axiosClient.post("/api/auth/sign-in", request)
         .then(response => {
-            if (response && response.data.token) {
-                setToken(response.data.token)
-                localStorage.setItem("token", response.data.token)
-                localStorage.setItem("refreshToken", response.data.refreshToken)
+            if (response.status === 200) {
+                setAuthenticated(true)
+                navigate("/dashboard")
             }
             return response.status
         })
-        .then((value) => {
-            navigate("/dashboard")
-            return value
+        .catch(reason => {
+            return reason.response.status
         })
-        .catch(reason => {return reason.response.status} )
 }
 
 
 interface AuthContextProps {
-    token: string | null
-    setToken: Dispatch<SetStateAction<string | null>>
-    handleSignIn: (setToken: Dispatch<SetStateAction<string | null>>, navigate: NavigateFunction, request: SingInRequest) => Promise<number>
-    handleSignOut: (setToken: Dispatch<SetStateAction<string | null>>, navigate: NavigateFunction) => void
+    authenticated: boolean
+    setAuthenticated: Dispatch<SetStateAction<boolean>>
+    handleSignIn: (setAuthenticated: Dispatch<SetStateAction<boolean>>, navigate: NavigateFunction, request: SingInRequest) => Promise<number>
+    handleSignOut: (setAuthenticated: Dispatch<SetStateAction<boolean>>, navigate: NavigateFunction) => void
 
 }
 
 export const AuthContext = createContext<AuthContextProps>({
-    token: null, setToken: () => {
-    }, handleSignIn, handleSignOut
+    authenticated: false,
+    setAuthenticated: () => {
+    },
+    handleSignIn,
+    handleSignOut
 })
 
 export interface SingInRequest {
@@ -49,12 +47,18 @@ interface AuthProviderProps {
     children?: ReactNode
 }
 
+const tokenCookie = (): boolean => {
+    const token = document.cookie.split("; ").find((row) => row.startsWith("token="))?.split("=")[1]
+    return !!token;
+}
+
 export const AuthProvider: FC<AuthProviderProps> = (props) => {
     const {children} = props
-    const [token, setToken] = useState<string | null>(localStorage.getItem("token"))
+    const [token, setToken] = useState<boolean>(tokenCookie())
 
     return (
-        <AuthContext.Provider value={{token: token, setToken: setToken, handleSignIn, handleSignOut}}>{children}
+        <AuthContext.Provider
+            value={{authenticated: token, setAuthenticated: setToken, handleSignIn, handleSignOut}}>{children}
         </AuthContext.Provider>
     )
 }

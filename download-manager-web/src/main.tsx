@@ -13,12 +13,12 @@ import {DashboardView} from "./dashboard/DashboardView.tsx";
 import './assets/custom.scss'
 import {AuthProvider} from "./auth/AuthProvider.tsx";
 import {AppSettings} from "./api/AppSettings.ts";
-import {jwtDecode} from "jwt-decode";
 import {Footer} from "./common/Footer.tsx";
 import {Container} from "react-bootstrap";
 import {PrivateRoute} from "./auth/PrivateRoute.tsx";
 
 export const axiosClient = axios.create({
+    withCredentials: true,
     baseURL: AppSettings.DOMAIN,
     timeout: 4000,
     headers: {
@@ -27,43 +27,9 @@ export const axiosClient = axios.create({
     },
 })
 
-axiosClient.interceptors.request.use((config) => {
-    const token: string | null = localStorage.getItem("token")
-    if (token) {
-        config.headers.Authorization = `Bearer ${token}`;
-    }
-    return config;
-});
 
 const refreshAccessToken = () => {
-    axiosClient.post("/api/auth/refresh-token", {"refreshToken": localStorage.getItem("refreshToken")})
-        .then(response => {
-            if (response && response.data.token) {
-                localStorage.setItem("token", response.data.token)
-                localStorage.setItem("refreshToken", response.data.refreshToken)
-            }
-        })
-}
-
-const addMinutes = (date: Date, minutes: number): Date => {
-    date.setMinutes(date.getMinutes() + minutes);
-    return date;
-}
-
-export const removeRefreshTokenIfExpired = () => {
-    if (isTokenExpired(localStorage.getItem("refreshToken"))) {
-        localStorage.removeItem("token")
-        localStorage.removeItem("refreshToken")
-    }
-}
-
-export const isTokenExpired = (token: string | null, shift: number = 0): boolean | undefined => {
-    if (token) {
-        const decoded = jwtDecode(token)
-        if (decoded.iat) {
-            return addMinutes(new Date(), shift).getTime().valueOf() / 1000 > decoded.iat
-        }
-    }
+    axiosClient.post("/api/auth/refresh-token", {})
 }
 
 axiosClient.interceptors.response.use(async (response) => {
@@ -71,24 +37,17 @@ axiosClient.interceptors.response.use(async (response) => {
 }, function (error) {
     const originalConfig = error.config;
 
-    if (isTokenExpired(localStorage.getItem("token"), 2)) {
-        refreshAccessToken();
-    }
-
-    if (error.response.status === 403 && localStorage.getItem("refreshToken")) {
+    if (error.response.status === 412) {
         refreshAccessToken();
         return axiosClient(originalConfig);
     }
 
-    if (error.response.status === 401 && localStorage.getItem("refreshToken")) {
-        localStorage.removeItem("token")
-        localStorage.removeItem("refreshToken")
+    if (error.response.status === 403  ) {
         window.location.href = '/sign-in';
     }
 
     return Promise.reject(error);
 })
-
 
 const queryClient = new QueryClient({
     defaultOptions: {

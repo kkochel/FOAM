@@ -1,8 +1,8 @@
-import {useContext, useEffect, useState} from "react";
+import {useContext,  useState} from "react";
 import {Button, Col, Container, Form, Row} from "react-bootstrap";
 import {useNavigate} from "react-router-dom";
 import {AuthContext} from "../auth/AuthProvider.tsx";
-import {removeRefreshTokenIfExpired} from "../main.tsx";
+// import {removeRefreshTokenIfExpired} from "../main.tsx";
 
 function invalidSignIn(responseStatus: number | undefined) {
     return <>
@@ -17,17 +17,17 @@ export const SignInForm = () => {
     const [username, setUsername] = useState<string>()
     const [password, setPassword] = useState<string>()
     const navigate = useNavigate();
-    const {setToken, handleSignIn} = useContext(AuthContext)
+    const {setAuthenticated, handleSignIn} = useContext(AuthContext)
     const disableSignInButton = (username === undefined || username.length === 0) || (password === undefined || password.length === 0)
     const [responseStatus, setResponseStatus] = useState<number>()
 
-    useEffect(() => {
-        removeRefreshTokenIfExpired()
-    }, []);
+    // useEffect(() => {
+    //     removeRefreshTokenIfExpired()
+    // }, []);
 
     const handleSubmit = () => {
         if (username && password) {
-            handleSignIn(setToken, navigate, {username: username, password: password})
+            handleSignIn(setAuthenticated, navigate, {username: username, password: password})
                 .then(value => setResponseStatus(value))
                 .catch(reason => setResponseStatus(reason))
         }
