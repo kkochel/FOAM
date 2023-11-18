@@ -1,6 +1,6 @@
 import {Alert, Button, Navbar} from "react-bootstrap";
 import fegaLogo from '../assets/FEGA-logo-generic.svg'
-import {FC, useContext, useEffect, useState} from "react";
+import {Dispatch, FC, SetStateAction, useContext, useEffect, useState} from "react";
 import {useNavigate} from "react-router-dom";
 import {AuthContext} from "../auth/AuthProvider.tsx";
 import {fetchData} from "../common/consts.ts";
@@ -12,10 +12,14 @@ interface HeaderResponse {
     c4ghKeyPresent: boolean
 }
 
-export const AuthenticatedHeader: FC = () => {
-    const {handleSignOut, setAuthenticated} = useContext(AuthContext)
-    const [userState, setUserState] = useState<HeaderResponse>()
+interface Props {
+    setC4ghKeyPresent:Dispatch<SetStateAction<boolean>>
+}
 
+export const AuthenticatedHeader: FC<Props> = (props) => {
+    const {handleSignOut, setAuthenticated} = useContext(AuthContext)
+    const {setC4ghKeyPresent} = props
+    const [userState, setUserState] = useState<HeaderResponse>()
     const href = "/api/cega-users/info";
     const navigate = useNavigate()
 
@@ -28,6 +32,7 @@ export const AuthenticatedHeader: FC = () => {
     useEffect(() => {
         if (data) {
             setUserState(data)
+            setC4ghKeyPresent(data.c4ghKeyPresent)
         }
     }, [data]);
 
