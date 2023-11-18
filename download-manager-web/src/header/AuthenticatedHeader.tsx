@@ -34,7 +34,7 @@ export const AuthenticatedHeader: FC<Props> = (props) => {
             setUserState(data)
             setC4ghKeyPresent(data.c4ghKeyPresent)
         }
-    }, [data, setAuthenticated]);
+    }, [data, setC4ghKeyPresent]);
 
     return (
         <>
