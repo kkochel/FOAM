@@ -14,5 +14,9 @@ public interface CegaUserRepository extends JpaRepository<CegaUser, Long> {
 
     @Transactional
     @Query("FROM CegaUser u LEFT JOIN FETCH u.keys k WHERE u.username = :username AND k.type = 'c4gh-v1' ")
+    Optional<CegaUser> userWithC4ghKeys(String username);
+
+    @Transactional
+    @Query("FROM CegaUser u LEFT JOIN FETCH u.keys k WHERE u.username = :username")
     CegaUser userWithKeys(String username);
 }

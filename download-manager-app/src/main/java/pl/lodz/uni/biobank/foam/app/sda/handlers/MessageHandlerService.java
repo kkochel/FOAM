@@ -7,25 +7,16 @@ import org.apache.tomcat.util.json.ParseException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.amqp.core.Message;
-import org.springframework.context.ApplicationEventPublisher;
-import org.springframework.stereotype.Service;
 
 import java.nio.charset.StandardCharsets;
 import java.util.LinkedHashMap;
 
-@Service
 public class MessageHandlerService {
     private static final Logger log = LoggerFactory.getLogger(MessageHandlerService.class);
+    private final MessageHandler head;
 
-    private final MessageHandler handler;
-
-    public MessageHandlerService(ApplicationEventPublisher eventPublisher) {
-        this.handler = new Permission(eventPublisher);
-
-        PermissionDeleted permissionDeleted = new PermissionDeleted(eventPublisher);
-
-        this.handler.setNext(permissionDeleted);
-        permissionDeleted.setNext(null);
+    public MessageHandlerService(MessageHandler first) {
+        this.head = first;
     }
 
     public void handle(Object message) throws ParseException, JsonProcessingException {
@@ -37,6 +28,6 @@ public class MessageHandlerService {
         CegaMessageType messageType = CegaMessageType.findByLabel(type);
 
         log.info("Handled message with type {} and body {}", type, body);
-        handler.handle(messageType, body);
+        head.handle(messageType, body);
     }
 }

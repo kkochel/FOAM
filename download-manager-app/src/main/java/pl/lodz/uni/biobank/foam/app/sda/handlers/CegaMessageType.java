@@ -2,7 +2,10 @@ package pl.lodz.uni.biobank.foam.app.sda.handlers;
 
 public enum CegaMessageType {
     PERMISSION("permission"),
-    PERMISSION_DELETED("permission.deleted");
+    PERMISSION_DELETED("permission.deleted"),
+    PASSWORD_UPDATED("password.updated"),
+    KEYS_UPDATED("keys.updated"),
+    DEAD_LETTER("unknown");
 
     public final String label;
 
@@ -17,6 +20,6 @@ public enum CegaMessageType {
             }
         }
 
-        throw new RuntimeException("Unknown message type: " + label);
+        return DEAD_LETTER;
     }
 }

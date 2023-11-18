@@ -58,7 +58,7 @@ public class ExportService {
 
     private String getCegaUserKey(String username, String fileId, UUID uuid) {
         try {
-            return userService.getPublicC4ghKey(username).getKey();
+            return userService.getPublicC4ghKey(username).get(0).getKey();
         } catch (RuntimeException e) {
             logService.save(new FileExportLog(fileId, username, uuid, ExportStage.ACCEPTED));
             exportFileService.updateFileStage(fileId, username, ExportStage.ACCEPTED);

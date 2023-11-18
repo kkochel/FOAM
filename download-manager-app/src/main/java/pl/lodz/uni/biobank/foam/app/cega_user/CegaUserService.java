@@ -5,8 +5,13 @@ import org.slf4j.LoggerFactory;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import pl.lodz.uni.biobank.foam.app.sda.api.CegaUserMessage;
+import pl.lodz.uni.biobank.foam.app.sda.api.KeysUpdatedMessage;
+import pl.lodz.uni.biobank.foam.app.sda.api.PasswordUpdatedMessage;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -31,7 +36,7 @@ public class CegaUserService {
 
     public UserData getUserData(Authentication authentication) {
         String username = (String) authentication.getPrincipal();
-        boolean keyPresent = !getPublicC4ghKey(username).getKey().isEmpty();
+        boolean keyPresent = !getPublicC4ghKey(username).isEmpty();
         String fullName = getUserFullName(username);
 
         return new UserData(fullName, keyPresent);
@@ -44,15 +49,16 @@ public class CegaUserService {
                 .orElseThrow(() -> new UsernameNotFoundException(username));
     }
 
-//    'c4gh-v1'
-    public CegaUserKey getPublicC4ghKey(String username) {
+    //'c4gh-v1'
+    public List<CegaUserKey> getPublicC4ghKey(String username) {
         return cegaUserRepository
-                .userWithKeys(username)
-                .getKeys()
-                .stream()
-                .filter(k ->k.getType().equals("c4gh-v1"))
-                .findAny()
-                .orElseThrow(()-> new RuntimeException("User dont have C4GH public key"));
+                .userWithC4ghKeys(username)
+                .map(cegaUser -> cegaUser
+                        .getKeys()
+                        .stream()
+                        .filter(k -> k.getType().equals("c4gh-v1"))
+                        .collect(Collectors.toList())).orElseGet(ArrayList::new);
+
     }
 
     private static void mapEventToEntity(CegaUserMessage event, CegaUser cu) {
@@ -68,5 +74,25 @@ public class CegaUserService {
         cu.setFullName(event.fullName());
         cu.setUsername(event.username());
         cu.setKeys(keys);
+    }
+
+    @Transactional
+    public void updateKeys(KeysUpdatedMessage message) {
+        Set<CegaUserKey> keys = message
+                .keys()
+                .stream()
+                .map(k -> new CegaUserKey(k.type(), k.key()))
+                .collect(Collectors.toSet());
+
+        cegaUserRepository
+                .userWithKeys(message.user())
+                .setKeys(keys);
+    }
+
+    @Transactional
+    public void updatePassword(PasswordUpdatedMessage message) {
+        cegaUserRepository
+                .findByUsername(message.user())
+                .ifPresent(cegaUser -> cegaUser.setPassword(message.passwordHash()));
     }
 }
