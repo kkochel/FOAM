@@ -2,9 +2,18 @@ import {createContext, Dispatch, FC, ReactNode, SetStateAction, useState} from "
 import {NavigateFunction} from "react-router-dom";
 import {axiosClient} from "../main.tsx";
 
-const handleSignOut = (setAuthenticated: Dispatch<SetStateAction<boolean>>, navigate: NavigateFunction,) => {
-    setAuthenticated(false)
-    navigate("/")
+const handleSignOut = (setAuthenticated: Dispatch<SetStateAction<boolean>>, navigate: NavigateFunction) => {
+    axiosClient.post("api/auth/sign-out")
+        .then(response => {
+            if(response.status > 200) {
+                setAuthenticated(false)
+                navigate("/")
+            } else {
+                setAuthenticated(false)
+                navigate("/")
+                console.error("Logout endpoint return not 2** status")
+            }
+        })
 }
 
 const handleSignIn = (setAuthenticated: Dispatch<SetStateAction<boolean>>, navigate: NavigateFunction, request: SingInRequest): Promise<number> => {

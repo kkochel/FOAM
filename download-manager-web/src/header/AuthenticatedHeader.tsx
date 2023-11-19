@@ -4,7 +4,7 @@ import {Dispatch, FC, SetStateAction, useContext, useEffect, useState} from "rea
 import {useNavigate} from "react-router-dom";
 import {AuthContext} from "../auth/AuthProvider.tsx";
 import {fetchData} from "../common/consts.ts";
-import {useQuery} from "@tanstack/react-query";
+import {useQuery, useQueryClient} from "@tanstack/react-query";
 import genomicMapOfPoland from "../assets/logo_genomic_map_poland.png";
 
 interface HeaderResponse {
@@ -22,7 +22,7 @@ export const AuthenticatedHeader: FC<Props> = (props) => {
     const [userState, setUserState] = useState<HeaderResponse>()
     const href = "/api/cega-users/info";
     const navigate = useNavigate()
-
+    const queryClient = useQueryClient()
 
     const {data} = useQuery({
         queryKey: ["header-query"],
@@ -35,6 +35,11 @@ export const AuthenticatedHeader: FC<Props> = (props) => {
             setC4ghKeyPresent(data.c4ghKeyPresent)
         }
     }, [data, setC4ghKeyPresent]);
+
+    const handleLogout = () => {
+        handleSignOut(setAuthenticated, navigate)
+        queryClient.removeQueries()
+    }
 
     return (
         <>
@@ -56,7 +61,7 @@ export const AuthenticatedHeader: FC<Props> = (props) => {
                                 Signed in as: {userState.fullName}
                             </Navbar.Text>
                             <Button variant={"outline-primary"} className={"ms-4"}
-                                    onClick={() => handleSignOut(setAuthenticated, navigate)}>Sign out</Button>
+                                    onClick={handleLogout}>Sign out</Button>
                         </Navbar.Collapse>
                     </Navbar>
 
