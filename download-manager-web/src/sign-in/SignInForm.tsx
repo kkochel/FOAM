@@ -2,7 +2,7 @@ import {useContext,  useState} from "react";
 import {Button, Col, Container, Form, Row} from "react-bootstrap";
 import {useNavigate} from "react-router-dom";
 import {AuthContext} from "../auth/AuthProvider.tsx";
-import {WcagContext} from "../common/WcagContextFoo.tsx";
+import {WcagContext} from "../common/WcagContextProvider.tsx";
 // import {removeRefreshTokenIfExpired} from "../main.tsx";
 
 function invalidSignIn(responseStatus: number | undefined) {
