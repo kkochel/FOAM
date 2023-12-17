@@ -13,9 +13,9 @@ import {DashboardView} from "./dashboard/DashboardView.tsx";
 import './assets/custom.scss'
 import {AuthProvider} from "./auth/AuthProvider.tsx";
 import {AppSettings} from "./api/AppSettings.ts";
-import {Footer} from "./common/Footer.tsx";
 import {Container} from "react-bootstrap";
 import {PrivateRoute} from "./auth/PrivateRoute.tsx";
+import {WcagProvider} from "./common/WcagContextProvider.tsx";
 
 export const axiosClient = axios.create({
     withCredentials: true,
@@ -42,7 +42,7 @@ axiosClient.interceptors.response.use(async (response) => {
         return axiosClient(originalConfig);
     }
 
-    if (error.response.status === 403  ) {
+    if (error.response.status === 403) {
         window.location.href = '/sign-in';
     }
 
@@ -89,13 +89,14 @@ const router = createBrowserRouter([
 ReactDOM.createRoot(document.getElementById('root')!).render(
     <React.StrictMode>
         <AuthProvider>
-            <QueryClientProvider client={queryClient}>
-                <Container fluid className={"h-100"}>
-                    <RouterProvider router={router}/>
-                    <ReactQueryDevtools initialIsOpen={false}/>
-                </Container>
-                <Footer/>
-            </QueryClientProvider>
+            <WcagProvider>
+                <QueryClientProvider client={queryClient}>
+                    <Container fluid className={"h-100"}>
+                        <RouterProvider router={router}/>
+                        <ReactQueryDevtools initialIsOpen={false}/>
+                    </Container>
+                </QueryClientProvider>
+            </WcagProvider>
         </AuthProvider>
     </React.StrictMode>,
 )

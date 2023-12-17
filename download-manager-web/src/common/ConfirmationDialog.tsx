@@ -1,5 +1,6 @@
-import {FC} from "react";
+import {FC, useContext} from "react";
 import {Button, Modal} from "react-bootstrap";
+import {WcagContext} from "./WcagContextProvider.tsx";
 
 interface Props {
     showConfirmation: boolean
@@ -10,6 +11,7 @@ interface Props {
 
 export const ConfirmationDialog: FC<Props> = (props) => {
     const {showConfirmation, onHideConfirmation, action, message} = props
+    const {fontSize} = useContext(WcagContext)
 
     function handleDenied() {
         onHideConfirmation(false)
@@ -31,12 +33,16 @@ export const ConfirmationDialog: FC<Props> = (props) => {
                 centered
             >
                 <Modal.Header closeButton>
-                    <Modal.Title>Please confirm the action</Modal.Title>
+                    <Modal.Title className={`h4-${fontSize}`}>Please confirm the action</Modal.Title>
                 </Modal.Header>
-                <Modal.Body>{message}</Modal.Body>
+                <Modal.Body className={`${fontSize}`}>{message}</Modal.Body>
                 <Modal.Footer>
-                    <Button variant="primary" onClick={handleDenied}>No</Button>
-                    <Button onClick={handleApprove} variant="secondary">Yes</Button>
+                    <Button variant="primary"
+                            className={`btn-${fontSize}`}
+                            onClick={handleDenied}>No</Button>
+                    <Button variant="secondary"
+                            className={`btn-${fontSize}`}
+                            onClick={handleApprove}>Yes</Button>
                 </Modal.Footer>
             </Modal>
         </>

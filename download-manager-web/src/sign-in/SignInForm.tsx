@@ -2,6 +2,7 @@ import {useContext,  useState} from "react";
 import {Button, Col, Container, Form, Row} from "react-bootstrap";
 import {useNavigate} from "react-router-dom";
 import {AuthContext} from "../auth/AuthProvider.tsx";
+import {WcagContext} from "../common/WcagContextFoo.tsx";
 // import {removeRefreshTokenIfExpired} from "../main.tsx";
 
 function invalidSignIn(responseStatus: number | undefined) {
@@ -20,10 +21,7 @@ export const SignInForm = () => {
     const {setAuthenticated, handleSignIn} = useContext(AuthContext)
     const disableSignInButton = (username === undefined || username.length === 0) || (password === undefined || password.length === 0)
     const [responseStatus, setResponseStatus] = useState<number>()
-
-    // useEffect(() => {
-    //     removeRefreshTokenIfExpired()
-    // }, []);
+    const {fontSize} = useContext(WcagContext)
 
     const handleSubmit = () => {
         if (username && password) {
@@ -35,27 +33,33 @@ export const SignInForm = () => {
 
     return (
         <Container>
-            <Row>
-                <Col xs={4}/>
-                <Col className={"border-with-shadow"}>
-                    <Form onSubmit={e => e.preventDefault()}>
+            <Row >
+                <Col xs={12} sm={2} md={2} lg={4} xl={4} xxl={4}/>
+                <Col xs={12} sm={8} md={8} lg={4} xl={4} xxl={4} className={"border-with-shadow"}>
+                    <Form>
                         <Form.Group>
-                            <Form.Label className={"fw-bold align-content-start"}>Username</Form.Label>
+                            <Form.Label className={`fw-bold ${fontSize}`}>Username</Form.Label>
                             <Form.Control id="username-input"
                                           type="text"
+                                          className={`form-control-${fontSize}`}
+                                          placeholder={"login"}
                                           value={username || ''}
                                           onChange={event => setUsername(event.target.value)}/>
                         </Form.Group>
                         <Form.Group>
-                            <Form.Label className={"fw-bold"}>Password</Form.Label>
+                            <Form.Label className={`fw-bold ${fontSize}`}>Password</Form.Label>
                             <Form.Control id="password-input"
                                           type="password"
+                                          className={`form-control-${fontSize}`}
+                                          placeholder={"password"}
                                           value={password || ''}
                                           onChange={event => setPassword(event.target.value)}/>
                         </Form.Group>
                         {invalidSignIn(responseStatus)}
                     </Form>
-                    <Button variant={"outline-primary"} disabled={disableSignInButton} className={"m-2"}
+                    <Button variant={"outline-primary"}
+                            disabled={disableSignInButton}
+                            className={`m-2 btn-${fontSize}`}
                             onClick={handleSubmit}>Sign in</Button>
                 </Col>
                 <Col xs={4}/>

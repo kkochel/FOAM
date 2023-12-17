@@ -2,3 +2,171 @@ $primary: #155177;
 
 // Bootstrap and its default variables
 @import "node_modules/bootstrap/scss/bootstrap";
+
+html {
+  @include media-breakpoint-up(xs) {
+    font-size: rfs-fluid-value(0.6rem);
+  }
+  @include media-breakpoint-up(sm) {
+    font-size: rfs-fluid-value(0.7rem);
+  }
+  @include media-breakpoint-up(md) {
+    font-size: rfs-fluid-value(0.8rem);
+  }
+  @include media-breakpoint-up(lg) {
+    font-size: rfs-fluid-value(1rem);
+  }
+  @include media-breakpoint-up(xl) {
+    font-size: rfs-fluid-value(1rem);
+  }
+  @include media-breakpoint-up(xxl) {
+    font-size: rfs-fluid-value(1rem);
+  }
+}
+
+.big-style {
+  @include media-breakpoint-up(xs) {
+    font-size: rfs-fluid-value(1.2rem);
+  }
+  @include media-breakpoint-up(sm) {
+    font-size: rfs-fluid-value(1.4rem);
+  }
+  @include media-breakpoint-up(md) {
+    font-size: rfs-fluid-value(1.6rem);
+  }
+  @include media-breakpoint-up(lg) {
+    font-size: rfs-fluid-value(2rem);
+  }
+  @include media-breakpoint-up(xl) {
+    font-size: rfs-fluid-value(2rem);
+  }
+  @include media-breakpoint-up(xxl) {
+    font-size: rfs-fluid-value(2rem);
+  }
+}
+
+.h1-big-style {
+  @include media-breakpoint-up(xs) {
+    font-size: rfs-fluid-value(3rem);
+  }
+  @include media-breakpoint-up(sm) {
+    font-size: rfs-fluid-value(3.5rem);
+  }
+  @include media-breakpoint-up(md) {
+    font-size: rfs-fluid-value(4rem);
+  }
+  @include media-breakpoint-up(lg) {
+    font-size: rfs-fluid-value(5rem);
+  }
+  @include media-breakpoint-up(xl) {
+    font-size: rfs-fluid-value(5rem);
+  }
+  @include media-breakpoint-up(xxl) {
+    font-size: rfs-fluid-value(5rem);
+  }
+}
+
+.h3-big-style {
+  @include media-breakpoint-up(xs) {
+    font-size: rfs-fluid-value(2.4rem);
+  }
+  @include media-breakpoint-up(sm) {
+    font-size: rfs-fluid-value(2.8rem);
+  }
+  @include media-breakpoint-up(md) {
+    font-size: rfs-fluid-value(3.2rem);
+  }
+  @include media-breakpoint-up(lg) {
+    font-size: rfs-fluid-value(4rem);
+  }
+  @include media-breakpoint-up(xl) {
+    font-size: rfs-fluid-value(4rem);
+  }
+  @include media-breakpoint-up(xxl) {
+    font-size: rfs-fluid-value(4rem);
+  }
+}
+
+.h4-big-style {
+  @include media-breakpoint-up(xs) {
+    font-size: rfs-fluid-value(1.8rem);
+  }
+  @include media-breakpoint-up(sm) {
+    font-size: rfs-fluid-value(2.1rem);
+  }
+  @include media-breakpoint-up(md) {
+    font-size: rfs-fluid-value(2.4rem);
+  }
+  @include media-breakpoint-up(lg) {
+    font-size: rfs-fluid-value(6rem);
+  }
+  @include media-breakpoint-up(xl) {
+    font-size: rfs-fluid-value(6rem);
+  }
+  @include media-breakpoint-up(xxl) {
+    font-size: rfs-fluid-value(6rem);
+  }
+}
+
+.h5-big-style {
+  @include media-breakpoint-up(xs) {
+    font-size: rfs-fluid-value(1.5rem);
+  }
+  @include media-breakpoint-up(sm) {
+    font-size: rfs-fluid-value(1.75rem);
+  }
+  @include media-breakpoint-up(md) {
+    font-size: rfs-fluid-value(2rem);
+  }
+  @include media-breakpoint-up(lg) {
+    font-size: rfs-fluid-value(2.5rem);
+  }
+  @include media-breakpoint-up(xl) {
+    font-size: rfs-fluid-value(2.5rem);
+  }
+  @include media-breakpoint-up(xxl) {
+    font-size: rfs-fluid-value(2.5rem);
+  }
+}
+
+.btn-big-style {
+  @include media-breakpoint-up(xs) {
+    font-size: rfs-fluid-value(1.2rem);
+  }
+  @include media-breakpoint-up(sm) {
+    font-size: rfs-fluid-value(1.4rem);
+  }
+  @include media-breakpoint-up(md) {
+    font-size: rfs-fluid-value(1.6rem);
+  }
+  @include media-breakpoint-up(lg) {
+    font-size: rfs-fluid-value(2rem);
+  }
+  @include media-breakpoint-up(xl) {
+    font-size: rfs-fluid-value(2rem);
+  }
+  @include media-breakpoint-up(xxl) {
+    font-size: rfs-fluid-value(2rem);
+  }
+}
+
+.form-control-big-style {
+  @include media-breakpoint-up(xs) {
+    font-size: rfs-fluid-value(1.2rem);
+  }
+  @include media-breakpoint-up(sm) {
+    font-size: rfs-fluid-value(1.4rem);
+  }
+  @include media-breakpoint-up(md) {
+    font-size: rfs-fluid-value(1.6rem);
+  }
+  @include media-breakpoint-up(lg) {
+    font-size: rfs-fluid-value(2rem);
+  }
+  @include media-breakpoint-up(xl) {
+    font-size: rfs-fluid-value(2rem);
+  }
+  @include media-breakpoint-up(xxl) {
+    font-size: rfs-fluid-value(2rem);
+  }
+}

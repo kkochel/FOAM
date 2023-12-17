@@ -1,4 +1,4 @@
-import {FC, useState} from "react";
+import {FC, useContext, useState} from "react";
 import {DatasetFile} from "./DashboardView.tsx";
 import {Button, Card} from "react-bootstrap";
 import {ConfirmationDialog} from "../common/ConfirmationDialog.tsx";
@@ -7,6 +7,7 @@ import {DatasetStatus, disableExportButton, postData} from "../common/consts.ts"
 import {ExportRequest} from "./Dashboard.tsx";
 import {FileHistoryList} from "./FileHistoryList.tsx";
 import {useMutation, useQueryClient} from "@tanstack/react-query";
+import {WcagContext} from "../common/WcagContextProvider.tsx";
 
 interface Props {
     datasetFile: DatasetFile
@@ -29,6 +30,7 @@ export const DatasetFileItemCard: FC<Props> = (props) => {
     const [confirmationDialog, setConfirmationDialog] = useState<boolean>(false)
     const [successNotification, setSuccessNotification] = useState(false);
     const [displayFileLog, setDisplayFileLog] = useState<boolean>()
+    const {fontSize} = useContext(WcagContext)
 
     const href: string = `/api/export/datasets/${datasetId}/files`
     const queryClient = useQueryClient()
@@ -52,22 +54,22 @@ export const DatasetFileItemCard: FC<Props> = (props) => {
         <>
             <Card className={"m-1 border-with-shadow"}>
                 <Card.Body>
-                    <Card.Title>{datasetFile.stableId} </Card.Title>
-                    <Card.Subtitle className={"text-bg-secondary"}>{getLastStatus(datasetFile.lastStage)}</Card.Subtitle>
+                    <Card.Title className={`h5-${fontSize}`}>{datasetFile.stableId} </Card.Title>
+                    <Card.Subtitle  className={`text-bg-secondary h5-${fontSize}`}>{getLastStatus(datasetFile.lastStage)}</Card.Subtitle>
                     <Button variant={"outline-primary"}
                             disabled={disableExportButton(datasetStatus)}
                             onClick={() => setConfirmationDialog(true)}
-                            className={"m-1"}>Export to outbox</Button>
+                            className={`m-1 btn-${fontSize}`}>Export to outbox</Button>
 
                     {displayFileLog ? <FileHistoryList datasetId={datasetId} fileId={datasetFile.stableId}/> : null}
                     {displayFileLog ?
                         <Button variant={"outline-primary"}
                                 onClick={() => setDisplayFileLog(false)}
-                                className={"m-1"}>Close history</Button>
+                                className={`m-1 btn-${fontSize}`}>Close history</Button>
                         :
                         <Button variant={"outline-primary"}
                                 onClick={() => setDisplayFileLog(true)}
-                                className={"m-1"}>Display file history</Button>
+                                className={`m-1 btn-${fontSize}`}>Display file history</Button>
                     }
 
                 </Card.Body>
