@@ -2,12 +2,6 @@ html {
     height: 100%;
 }
 
-@media screen and (min-width: 1000px) and (min-height: 1200px){
-    body {
-        overflow: hidden;
-    }
-}
-
 .wrap {
     display: inline-block;
     word-break: break-word;

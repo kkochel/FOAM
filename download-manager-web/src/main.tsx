@@ -16,6 +16,7 @@ import {AppSettings} from "./api/AppSettings.ts";
 import {Container} from "react-bootstrap";
 import {PrivateRoute} from "./auth/PrivateRoute.tsx";
 import {WcagProvider} from "./common/WcagContextProvider.tsx";
+import {DeclarationOfAvailability} from "./common/DeclarationOfAvailability.tsx";
 
 export const axiosClient = axios.create({
     withCredentials: true,
@@ -67,6 +68,12 @@ const router = createBrowserRouter([
         path: "/sign-in",
         element: <SignIn/>,
         errorElement: <ErrorPage/>
+    },
+    {
+        path: "/declaration",
+        element: <DeclarationOfAvailability/>,
+        errorElement: <ErrorPage/>
+
     },
     {
         path: "/dashboard",

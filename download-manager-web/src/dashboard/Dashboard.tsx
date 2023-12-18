@@ -97,7 +97,7 @@ export const Dashboard = () => {
                     {displayEmpty ?
                         <Container>
                             <Row xs={12} sm={12} md={12} lg={10} xl={10} xxl={10} className="overflow-auto"
-                                 style={{minHeight: '70vh'}}/>
+                                 style={{minHeight: '65vh'}}/>
                         </Container> : null
                     }
                     <Col><Outlet/></Col>

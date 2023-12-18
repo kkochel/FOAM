@@ -57,7 +57,7 @@ export const DatasetFiles: FC<Props> = (props) => {
                     />
                 </Form.Group>
             </Form>
-            <Row xs={1} md={2} className="overflow-auto" style={{maxHeight: '70vh'}}>
+            <Row xs={1} md={2} className="overflow-auto" style={{maxHeight: '65vh'}}>
                 {filteredFiles && filteredFiles.length > 0 ? filteredFiles.map((value, index) => {
                     return <Fragment key={index}>
                         <Col>

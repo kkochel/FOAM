@@ -1,6 +1,7 @@
 import footer from "../assets/horizontal_footer_pl.png"
-import {Col, Container, Row} from "react-bootstrap";
+import {Col, Container, Nav, Row} from "react-bootstrap";
 import {FC} from "react";
+import {Link} from "react-router-dom";
 
 
 export const Footer: FC = () => {
@@ -8,12 +9,19 @@ export const Footer: FC = () => {
     return (
         <Container fluid={"sm"} className={"text-center text-md-start"}>
             <Row>
-                <Col xs={12} lg={2} xl={2} xxl={3}/>
-                <Col xs={12} sm={5} md={11} lg={2} xl={2} xxl={5}>
+                <Col xs={12} sm={2} md={2} lg={2} xl={3} xxl={3}></Col>
+                <Col xs={12} sm={10} md={10} lg={10} xl={9} xxl={9}>
                     <footer>
-                        <img src={footer} alt={alt}/>
+                        <img style={{"maxWidth": "100%", "height": "auto"}} src={footer} alt={alt}/>
                     </footer>
                 </Col>
+            </Row>
+            <Row>
+                <Nav className={"flex-column"}>
+                    <Nav.Item key={"declaration"}>
+                        <Nav.Link as={Link} to={`/declaration`}>Declaration of availability</Nav.Link>
+                    </Nav.Item>
+                </Nav>
             </Row>
 
         </Container>
