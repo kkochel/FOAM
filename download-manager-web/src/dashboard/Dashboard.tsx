@@ -21,7 +21,7 @@ export const Dashboard = () => {
     const [filterValue, setFilterValue] = useState<string>()
     const [c4ghKeyPresent, setC4ghKeyPresent] = useState<boolean>(false)
     const location: string = useLocation().pathname
-    const [displayEmpty, setDisplayEmty] = useState<boolean>(true)
+    const [displayEmpty, setDisplayEmpty] = useState<boolean>(true)
     const {fontSize} = useContext(WcagContext)
 
     const href: string = "/api/datasets"
@@ -50,9 +50,8 @@ export const Dashboard = () => {
 
     useEffect(() => {
         if ("/dashboard" !== location) {
-            setDisplayEmty(false)
+            setDisplayEmpty(false)
         }
-        console.log("location: ", location)
     }, [location]);
 
     return (
@@ -66,7 +65,7 @@ export const Dashboard = () => {
                             <Form style={{"paddingLeft": "2rem", "paddingRight": "2rem"}}
                                   onSubmit={e => e.preventDefault()}>
                                 <Form.Group style={{"textAlign": "left"}}>
-                                    <Form.Label htmlFor={"dataset-search"}>Search dataset</Form.Label>
+                                    <Form.Label htmlFor={"dataset-search"} column={"sm"}>Search dataset</Form.Label>
                                     <Form.Control id={"dataset-search"}
                                                   className={`border-black border-2 form-control-${fontSize}`}
                                                   type={"text"}

@@ -12,7 +12,6 @@ export const SkipLink = () => {
         if ("/dashboard" !== location) {
             setSearchFiles(true)
         }
-        console.log("location: ", location)
     }, [location]);
 
     return (

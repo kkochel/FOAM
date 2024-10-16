@@ -1,9 +1,8 @@
 import {useContext,  useState} from "react";
 import {Button, Col, Container, Form, Row} from "react-bootstrap";
-import {useNavigate} from "react-router-dom";
 import {AuthContext} from "../auth/AuthProvider.tsx";
 import {WcagContext} from "../common/WcagContextProvider.tsx";
-// import {removeRefreshTokenIfExpired} from "../main.tsx";
+import {useNavigate} from "react-router-dom";
 
 function invalidSignIn(responseStatus: number | undefined) {
     return <>
@@ -38,7 +37,7 @@ export const SignInForm = () => {
                 <Col xs={12} sm={8} md={8} lg={4} xl={4} xxl={4} className={"border-with-shadow"}>
                     <Form>
                         <Form.Group>
-                            <Form.Label className={`fw-bold ${fontSize}`}>Username</Form.Label>
+                            <Form.Label className={`fw-bold ${fontSize}`} column={"sm"}>Username</Form.Label>
                             <Form.Control id="username-input"
                                           type="text"
                                           className={`form-control-${fontSize}`}
@@ -47,7 +46,7 @@ export const SignInForm = () => {
                                           onChange={event => setUsername(event.target.value)}/>
                         </Form.Group>
                         <Form.Group>
-                            <Form.Label className={`fw-bold ${fontSize}`}>Password</Form.Label>
+                            <Form.Label className={`fw-bold ${fontSize}`} column={"sm"}>Password</Form.Label>
                             <Form.Control id="password-input"
                                           type="password"
                                           className={`form-control-${fontSize}`}

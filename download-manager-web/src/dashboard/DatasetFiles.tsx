@@ -36,7 +36,8 @@ export const DatasetFiles: FC<Props> = (props) => {
         if (files && filterValue) {
             const filtered = files.filter(file =>
                 file.stableId.toLowerCase().includes(filterValue.toLowerCase()) ||
-                file.lastStage.toLowerCase().includes(filterValue.toLowerCase()))
+                file.lastStage.toLowerCase().includes(filterValue.toLowerCase()) ||
+                file.fileName.includes(filterValue.toLowerCase()))
             setFilteredFiles(filtered)
         } else {
             setFilteredFiles(files)
@@ -48,7 +49,7 @@ export const DatasetFiles: FC<Props> = (props) => {
             <DatasetFilesHeader datasetId={dataset.stableId} status={dataset.status}/>
             <Form className={"m-2"} onSubmit={e => e.preventDefault()}>
                 <Form.Group style={{"textAlign": "left"}}>
-                    <Form.Label htmlFor={"file-search"}>Search file</Form.Label>
+                    <Form.Label htmlFor={"file-search"} column={"sm"}>Search file</Form.Label>
                     <Form.Control id={"file-search"}
                                   className={`border-black border-2 form-control-${fontSize}`}
                                   type={"text"}

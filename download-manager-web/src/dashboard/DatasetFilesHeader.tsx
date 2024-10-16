@@ -26,7 +26,7 @@ export const DatasetFilesHeader: FC<Props> = (props) => {
     const {mutate} = useMutation({
         mutationFn: (dto: ExportRequest) => postData<ExportRequest, string>(href, dto),
         onSuccess: () => {
-            queryClient.refetchQueries(["dataset-files", datasetId])
+            queryClient.refetchQueries({ queryKey: ["dataset-files", datasetId]})
         },
         onError: (error) => {
             console.error(error);
