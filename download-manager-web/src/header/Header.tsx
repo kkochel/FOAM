@@ -1,5 +1,6 @@
 import {Button, Col, Navbar, Row} from "react-bootstrap";
-import fegaLogo from '../assets/FEGA-logo-generic.svg'
+import fegaLogo from '../assets/FEGA_Generic.svg'
+import fegaPlLogo from '../assets/FEGA_Poland.svg'
 import genomicMapOfPoland from '../assets/logo_genomic_map_poland.png'
 import {FC, useContext, useEffect, useState} from "react";
 import {Link, useLocation} from "react-router-dom";
@@ -23,7 +24,7 @@ export const Header: FC = () => {
             <div id={"header-home"}>
                 <Navbar>
                     <Row className={"w-100"}>
-                        <Col xs={12} sm={4} md={4} lg={3} xl={2} xxl={2}>
+                        <Col xs={12} sm={6} md={6} lg={6} xl={2} xxl={2}>
                             <Navbar.Brand href="https://ega-archive.org/about/projects-and-funders/federated-ega/">
                                 <img src={fegaLogo}
                                      width={"190px"}
@@ -31,13 +32,15 @@ export const Header: FC = () => {
                                      className="d-inline-block align-top" alt="FEGA logo"/>
                             </Navbar.Brand>
                         </Col>
-                        <Col xs={12} sm={4} md={4} lg={3} xl={2} xxl={2}>
-                            <img src={genomicMapOfPoland}
-                                 width={"190px"}
-                                 height={"75px"}
-                                 className="d-inline-block align-top" alt="Genomic Map of Poland logo"/>
+                        <Col xs={12} sm={6} md={6} lg={6} xl={2} xxl={2}>
+                            <Navbar.Brand href="https://fega-info.uni.lodz.pl/">
+                                <img src={fegaPlLogo}
+                                     width={"190px"}
+                                     height={"75px"}
+                                     className="d-inline-block align-top" alt="FEGA logo"/>
+                            </Navbar.Brand>
                         </Col>
-                        <Col xs={12} sm={2} md={2} lg={3} xl={2} xxl={4}>
+                        <Col xs={12} sm={12} md={12} lg={12} xl={4} xxl={4}>
                             <h1 className={`h1-${fontSize}`}>Federated EGA Polish Node</h1>
                             <Button variant={"outline-primary"}
                                     onClick={() => setFontSize("normal-style")}
@@ -50,8 +53,14 @@ export const Header: FC = () => {
                                     active={fontSize === "big-style"}
                                     aria-label={"Enlarge text"}>Enlarge text size</Button>
                         </Col>
+                        <Col xs={12} sm={6} md={6} lg={6} xl={2} xxl={2}>
+                            <img src={genomicMapOfPoland}
+                                 width={"190px"}
+                                 height={"75px"}
+                                 className="d-inline-block align-top" alt="Genomic Map of Poland logo"/>
+                        </Col>
                         {hideSignIn &&
-                        <Col xs={12} sm={2} md={2} lg={3} xl={6} xxl={4}>
+                        <Col xs={12} sm={6} md={6} lg={6} xl={2} xxl={2}>
                             <Navbar.Collapse className="justify-content-end">
                                 <Link to={"/sign-in"}>
                                     <Button variant={"outline-primary"}
