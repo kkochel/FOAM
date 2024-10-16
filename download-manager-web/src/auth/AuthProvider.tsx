@@ -1,11 +1,11 @@
-import {createContext, Dispatch, FC, ReactNode, SetStateAction, useState} from "react";
+import {createContext, Dispatch, FC, ReactNode, SetStateAction, useEffect, useState} from "react";
 import {NavigateFunction} from "react-router-dom";
 import {axiosClient} from "../main.tsx";
 
 const handleSignOut = (setAuthenticated: Dispatch<SetStateAction<boolean>>, navigate: NavigateFunction) => {
     axiosClient.post("api/auth/sign-out")
         .then(response => {
-            if(response.status > 200) {
+            if (response.status > 200) {
                 setAuthenticated(false)
                 navigate("/")
             } else {
@@ -36,15 +36,20 @@ interface AuthContextProps {
     setAuthenticated: Dispatch<SetStateAction<boolean>>
     handleSignIn: (setAuthenticated: Dispatch<SetStateAction<boolean>>, navigate: NavigateFunction, request: SingInRequest) => Promise<number>
     handleSignOut: (setAuthenticated: Dispatch<SetStateAction<boolean>>, navigate: NavigateFunction) => void
+    verifyCookie: () => Promise<number>
 
+}
+
+const verifyCookie = async (): Promise<number> => {
+    return await checkCookie();
 }
 
 export const AuthContext = createContext<AuthContextProps>({
     authenticated: false,
-    setAuthenticated: () => {
-    },
+    setAuthenticated: () => {},
     handleSignIn,
-    handleSignOut
+    handleSignOut,
+    verifyCookie: verifyCookie
 })
 
 export interface SingInRequest {
@@ -56,18 +61,47 @@ interface AuthProviderProps {
     children?: ReactNode
 }
 
-const tokenCookie = (): boolean => {
-    const token = document.cookie.split("; ").find((row) => row.startsWith("token="))?.split("=")[1]
-    return !!token;
+const checkCookie = async (): Promise<number> => {
+    const response = await axiosClient.get("/api/auth/is-authenticated",{validateStatus: (status) => status < 500 });
+    return response.status;
 }
 
 export const AuthProvider: FC<AuthProviderProps> = (props) => {
     const {children} = props
-    const [token, setToken] = useState<boolean>(tokenCookie())
+    const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false)
+
+    console.log("AuthProvider: isAuthenticated: ", isAuthenticated)
+
+    useEffect(() => {
+        verifyCookie()
+            .then((status) => {
+                if (status === 200) {
+                    setIsAuthenticated(true);
+                }
+
+                if (status === 401) {
+                    console.log("Not authenticated");
+                    setIsAuthenticated(false);
+                }
+
+                if (status === 403) {
+                    setIsAuthenticated(false);
+                }
+            })
+            .catch(() => {
+                console.error("Not authenticated");
+                setIsAuthenticated(false);
+            });
+    }, []);
 
     return (
         <AuthContext.Provider
-            value={{authenticated: token, setAuthenticated: setToken, handleSignIn, handleSignOut}}>{children}
-        </AuthContext.Provider>
+            value={{
+                authenticated: isAuthenticated,
+                setAuthenticated: setIsAuthenticated,
+                handleSignIn,
+                handleSignOut,
+                verifyCookie: verifyCookie
+            }}>{children}</AuthContext.Provider>
     )
 }

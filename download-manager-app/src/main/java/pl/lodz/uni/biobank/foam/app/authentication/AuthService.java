@@ -1,5 +1,6 @@
 package pl.lodz.uni.biobank.foam.app.authentication;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -25,5 +26,18 @@ public class AuthService {
 
     public AuthenticationResponse refreshToken(String refreshToken) {
         return jwtService.refreshToken(refreshToken);
+    }
+
+    public HttpStatus isAuthenticated(String token) {
+        if (token == null) {
+            return HttpStatus.UNAUTHORIZED;
+        }
+        
+        try {
+            jwtService.validate(token);
+            return HttpStatus.OK;
+        } catch (Exception e) {
+            return HttpStatus.UNAUTHORIZED;
+        }
     }
 }

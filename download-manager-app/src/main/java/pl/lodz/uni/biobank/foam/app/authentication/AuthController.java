@@ -47,4 +47,9 @@ public class AuthController {
         response.setStatus(HttpStatus.NO_CONTENT.value());
         SecurityContextHolder.clearContext();
     }
+
+    @GetMapping("is-authenticated")
+    public ResponseEntity<HttpStatus> isAuthenticated(@CookieValue(value = "token", required = false) String token) {
+        return ResponseEntity.status(service.isAuthenticated(token)).build();
+    }
 }
