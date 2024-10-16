@@ -4,8 +4,8 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.TypedQuery;
 import org.springframework.stereotype.Repository;
+import pl.lodz.uni.biobank.foam.shared.FileData;
 
-import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
 

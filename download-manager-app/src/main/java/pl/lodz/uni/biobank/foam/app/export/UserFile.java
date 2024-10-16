@@ -2,6 +2,7 @@ package pl.lodz.uni.biobank.foam.app.export;
 
 import jakarta.persistence.*;
 
+import java.io.File;
 import java.util.Objects;
 
 import static jakarta.persistence.GenerationType.SEQUENCE;
@@ -28,13 +29,17 @@ public class UserFile {
     @Column(name = "export_stage")
     private ExportStage exportStage;
 
+    @Column(name = "file_name")
+    private String fileName;
+
     protected UserFile() {
     }
 
-    public UserFile(String datasetId, String stableId, String username) {
+    public UserFile(String datasetId, String stableId, String username, String fileName) {
         this.datasetId = datasetId;
         this.stableId = stableId;
         this.username = username;
+        this.fileName = fileName;
     }
 
     public String getStableId() {
@@ -51,6 +56,11 @@ public class UserFile {
 
     public void updateStage(ExportStage exportStage) {
         this.exportStage = exportStage;
+    }
+
+    public String getFileName() {
+        File file = new File(this.fileName);
+        return file.getName();
     }
 
     @Override

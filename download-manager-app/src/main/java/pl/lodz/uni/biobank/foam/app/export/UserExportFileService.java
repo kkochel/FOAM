@@ -18,7 +18,7 @@ public class UserExportFileService {
     public void handleEvent(UserExportFilesEventList event) {
         List<UserFile> userFiles = event.list()
                 .stream()
-                .map(e -> new UserFile(e.datasetId(), e.fileId(), e.username()))
+                .map(e -> new UserFile(e.datasetId(), e.fileId(), e.username(), e.fileName()))
                 .toList();
 
         repository.saveAll(userFiles);
@@ -33,7 +33,7 @@ public class UserExportFileService {
     public List<UserFileResponse> getFiles(String datasetId, String username) {
         return repository.getFiles(datasetId, username)
                 .stream()
-                .map(f-> new UserFileResponse(f.getStableId(), f.getExportStage() != null ? f.getExportStage().label : StringUtils.EMPTY))
+                .map(f -> new UserFileResponse(f.getStableId(), f.getFileName(), f.getExportStage() != null ? f.getExportStage().label : StringUtils.EMPTY))
                 .sorted(Comparator.comparing(UserFileResponse::stableId))
                 .toList();
     }

@@ -6,10 +6,13 @@ plugins {
 }
 
 group = 'pl.lodz.uni.biobank.foam'
-version = '0.0.1-SNAPSHOT'
+version = '1.0.0'
 
 java {
-    sourceCompatibility = '17'
+    sourceCompatibility = '21'
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(21)
+    }
 }
 
 configurations {
@@ -30,11 +33,12 @@ repositories {
 }
 
 dependencies {
+    implementation project(':shared')
     implementation 'org.springframework.boot:spring-boot-starter-amqp'
-    implementation 'no.uio.ifi:crypt4gh:2.4.7'
+    implementation 'no.uio.ifi:crypt4gh:2.5.1'
     implementation 'com.fasterxml.jackson.core:jackson-annotations:2.15.2'
     implementation 'com.fasterxml.jackson.core:jackson-databind:2.15.2'
-    implementation 'io.minio:minio:8.5.6'
+    implementation 'io.minio:minio:8.5.12'
     developmentOnly 'org.springframework.boot:spring-boot-devtools'
     annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'

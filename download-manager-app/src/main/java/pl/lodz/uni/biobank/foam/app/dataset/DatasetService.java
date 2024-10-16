@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import pl.lodz.uni.biobank.foam.app.export.UserExportFile;
 import pl.lodz.uni.biobank.foam.app.permission.PermissionService;
 import pl.lodz.uni.biobank.foam.app.permission.PermissionStatus;
+import pl.lodz.uni.biobank.foam.shared.FileData;
 
 import java.util.List;
 
@@ -50,7 +51,7 @@ public class DatasetService {
     public void handleNewDatasetPermission(NewDatasetPermissionEvent event) {
         List<UserExportFile> list = repository.getWithFilesBy(event.datasetId())
                 .getFiles().stream()
-                .map(f -> new UserExportFile(event.datasetId(), f.getStableId(), event.username()))
+                .map(f -> new UserExportFile(event.datasetId(), f.getStableId(), event.username(), f.getFileName()))
                 .toList();
 
         userExportFileEventPublisher.handle(list);

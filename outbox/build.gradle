@@ -5,10 +5,13 @@ plugins {
 }
 
 group = 'pl.lodz.uni.biobank.foam'
-version = '0.0.1-SNAPSHOT'
+version = '1.0.0'
 
 java {
-	sourceCompatibility = '17'
+	sourceCompatibility = '21'
+	toolchain {
+		languageVersion = JavaLanguageVersion.of(21)
+	}
 }
 
 configurations {
@@ -22,6 +25,7 @@ repositories {
 }
 
 dependencies {
+	implementation project(':shared')
 	implementation 'org.springframework.boot:spring-boot-starter-amqp'
 	implementation 'org.springframework.boot:spring-boot-starter-security'
 	implementation 'org.springframework.boot:spring-boot-starter-web'

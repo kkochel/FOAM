@@ -6,7 +6,7 @@ import pl.lodz.uni.biobank.foam.app.cega_user.CegaUserService;
 import pl.lodz.uni.biobank.foam.app.dataset.Dataset;
 import pl.lodz.uni.biobank.foam.app.dataset.DatasetAccessDeniedException;
 import pl.lodz.uni.biobank.foam.app.dataset.DatasetService;
-import pl.lodz.uni.biobank.foam.app.dataset.FileData;
+import pl.lodz.uni.biobank.foam.shared.FileData;
 
 import java.util.UUID;
 

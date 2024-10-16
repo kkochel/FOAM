@@ -8,6 +8,7 @@ import {useQuery} from "@tanstack/react-query";
 export interface DatasetFile {
   stableId: string,
   lastStage: string,
+  fileName: string
 }
 
 export interface Dataset {

@@ -24,6 +24,12 @@ function getLastStatus(lastStage: string | undefined) {
     return undefined;
 }
 
+function getFileName(lastStage: string | undefined) {
+    if (lastStage) {
+        return `File name: ${lastStage}`
+    }
+    return undefined;
+}
 
 export const DatasetFileItemCard: FC<Props> = (props) => {
     const {datasetFile, datasetStatus, datasetId} = props
@@ -38,7 +44,7 @@ export const DatasetFileItemCard: FC<Props> = (props) => {
     const {mutate} = useMutation({
         mutationFn: (dto: ExportRequest) => postData<ExportRequest, string>(href, dto),
         onSuccess: () => {
-            queryClient.refetchQueries(["dataset-files", datasetId])
+            queryClient.refetchQueries({ queryKey: ["dataset-files", datasetId] })
         },
         onError: (error) => {
             console.error(error);
@@ -54,8 +60,9 @@ export const DatasetFileItemCard: FC<Props> = (props) => {
         <>
             <Card className={"m-1 border-with-shadow"}>
                 <Card.Body>
-                    <Card.Title className={`h5-${fontSize}`}>{datasetFile.stableId} </Card.Title>
-                    <Card.Subtitle  className={`text-bg-secondary h5-${fontSize}`}>{getLastStatus(datasetFile.lastStage)}</Card.Subtitle>
+                    <Card.Title className={`h5-${fontSize}`}>{datasetFile.stableId}  </Card.Title>
+                    <Card.Subtitle  className={`text-bg-secondary h5-${fontSize}`}>{getFileName(datasetFile.fileName)}</Card.Subtitle>
+                    <Card.Text  className={`text-bg-secondary h5-${fontSize}`}>{getLastStatus(datasetFile.lastStage)}</Card.Text>
                     <Button variant={"outline-primary"}
                             disabled={disableExportButton(datasetStatus)}
                             onClick={() => setConfirmationDialog(true)}

@@ -1,6 +1,7 @@
 package pl.lodz.uni.biobank.foam.app.dataset;
 
 import jakarta.persistence.*;
+import pl.lodz.uni.biobank.foam.shared.FileData;
 
 import java.util.Objects;
 

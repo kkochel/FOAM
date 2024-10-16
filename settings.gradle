@@ -1,0 +1,2 @@
+rootProject.name = 'file-output-and-management'
+include 'c4gh-file-service', 'download-manager-app', 'integration', 'outbox', 'shared'

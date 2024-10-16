@@ -13,9 +13,11 @@ public class DeadLetterQueue implements MessageHandler {
         this.template = template;
     }
 
+    @Deprecated
     @Override
-    public void setNext(MessageHandler handler) {
-
+    public void setNext(MessageHandler handler) throws RuntimeException {
+        log.info("This is empty handler");
+        throw new RuntimeException("This is empty handler");
     }
 
     @Override
