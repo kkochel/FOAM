@@ -7,3 +7,5 @@ databaseChangeLog:
       file: db/changelog/update_log_export_stage_constraint.sql
   - include:
       file: db/changelog/update_user_files_stage_constraint.sql
+  - include:
+      file: db/changelog/add_filename_column.sql
