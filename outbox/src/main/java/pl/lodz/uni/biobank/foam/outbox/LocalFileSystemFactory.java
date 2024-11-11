@@ -40,11 +40,15 @@ public class LocalFileSystemFactory implements FileSystemFactory {
     @Value("${application.local.directory}")
     private String outboxFolder;
 
+    private final UserRootPath urp = ((outboxLocaltion, username) ->
+            outboxLocaltion.endsWith(File.separator) ?
+                    outboxLocaltion + username :
+                    outboxLocaltion + File.separator + username);
+
     @Override
     public FileSystem createFileSystem(SessionContext session) {
         String username = session.getUsername();
-        String root = outboxFolder.endsWith(File.separator) ? outboxFolder + username : outboxFolder + File.separator + username;
-        File home = new File(root);
+        File home = new File(urp.getPath(outboxFolder, username));
         home.mkdirs();
 
         log.info("Created directory: {} for user: {} ", home.getAbsolutePath(), username);
@@ -62,11 +66,6 @@ public class LocalFileSystemFactory implements FileSystemFactory {
 
     @Override
     public Path getUserHomeDir(SessionContext session) {
-        String username = session.getUsername();
-        if (outboxFolder.endsWith(File.separator)) {
-            return Paths.get(outboxFolder + username);
-        } else {
-            return Paths.get(outboxFolder + File.separator + username);
-        }
+        return Paths.get(urp.getPath(outboxFolder, session.getUsername()));
     }
 }

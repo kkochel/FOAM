@@ -15,11 +15,9 @@ import java.nio.file.Path;
 import java.util.Collection;
 import java.util.Map;
 
-import static pl.lodz.uni.biobank.foam.outbox.Operation.REMOVE;
-
 @Component
 public class OutboxSftpEventListener implements SftpEventListener {
-    private static final Logger log = LoggerFactory.getLogger(OutboxAuthenticator.class);
+    private static final Logger log = LoggerFactory.getLogger(OutboxSftpEventListener.class);
 
     private final FileStatusService fileStatusService;
 

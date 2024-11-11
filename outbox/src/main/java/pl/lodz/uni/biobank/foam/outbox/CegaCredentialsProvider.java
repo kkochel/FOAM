@@ -3,7 +3,6 @@ package pl.lodz.uni.biobank.foam.outbox;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.*;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestClientException;
@@ -31,7 +30,6 @@ public class CegaCredentialsProvider {
         this.restTemplate = restTemplate;
     }
 
-    @Cacheable("cega-credentials")
     public Credentials getCredentials(String username) {
         ResponseEntity<Credentials> response = getCredentialsResponseEntity(getUrl(username), getHeaders());
         HttpStatus statusCode = (HttpStatus) response.getStatusCode();
