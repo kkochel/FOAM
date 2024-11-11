@@ -1,6 +1,7 @@
 package pl.lodz.uni.biobank.foam.app.export;
 
 import jakarta.persistence.*;
+import pl.lodz.uni.biobank.foam.shared.ExportStage;
 
 import java.io.File;
 import java.util.Objects;

@@ -6,6 +6,7 @@ import org.apache.commons.codec.DecoderException;
 import org.apache.commons.codec.binary.Hex;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import pl.lodz.uni.biobank.foam.shared.ExportStage;
 
 import java.io.*;
 import java.security.GeneralSecurityException;

@@ -10,6 +10,7 @@ import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
 import java.net.MalformedURLException;
+import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.Base64;
@@ -51,7 +52,7 @@ public class CegaCredentialsProvider {
 
     private URL getUrl(String username) {
         try {
-            return new URL(String.format(cegaEndpoint, username));
+            return URI.create(String.format(cegaEndpoint, username)).toURL();
         } catch (MalformedURLException e) {
             log.error("Error when creating URL for user: {}", username);
             throw new RuntimeException(e);

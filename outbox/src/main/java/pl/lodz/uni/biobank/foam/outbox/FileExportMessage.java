@@ -1,5 +1,7 @@
 package pl.lodz.uni.biobank.foam.outbox;
 
+import pl.lodz.uni.biobank.foam.shared.ExportStage;
+
 import java.util.UUID;
 
 public record FileExportMessage(

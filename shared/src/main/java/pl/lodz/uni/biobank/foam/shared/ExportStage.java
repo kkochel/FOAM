@@ -1,4 +1,4 @@
-package pl.lodz.uni.biobank.foam.outbox;
+package pl.lodz.uni.biobank.foam.shared;
 
 public enum ExportStage {
     ACCEPTED("Accepted"),

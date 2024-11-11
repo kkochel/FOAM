@@ -3,6 +3,7 @@ package pl.lodz.uni.biobank.foam.app.export;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import pl.lodz.uni.biobank.foam.shared.ExportStage;
 
 import java.util.Comparator;
 import java.util.List;

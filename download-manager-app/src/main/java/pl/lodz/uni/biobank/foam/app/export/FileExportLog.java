@@ -2,6 +2,7 @@ package pl.lodz.uni.biobank.foam.app.export;
 
 import jakarta.persistence.*;
 import org.hibernate.annotations.CreationTimestamp;
+import pl.lodz.uni.biobank.foam.shared.ExportStage;
 
 import java.util.Date;
 import java.util.Objects;
