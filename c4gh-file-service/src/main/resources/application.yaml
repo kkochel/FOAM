@@ -17,6 +17,15 @@ spring:
       key-store-type: ${KEYSTORE_TYPE:JKS}
       key-store-password: ${KEYSTORE_PASSWORD}
 
+management:
+  endpoint:
+    health:
+      enabled: true
+      probes:
+        enabled: true
+  server:
+    port: 9000
+
 outbox:
   type: ${OUTBOX_TYPE:posix}
   path: ${OUTBOX_PATH:src/test/resources/}

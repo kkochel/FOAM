@@ -29,3 +29,12 @@ spring:
 app:
   foam-dataset:
     routing-key: ${FOAM_ROUTING_KEY:foam_dataset}
+
+management:
+  endpoint:
+    health:
+      enabled: true
+      probes:
+        enabled: true
+  server:
+    port: 9000

@@ -12,14 +12,6 @@ spring:
       key-store-type: ${KEYSTORE_TYPE:PKCS12}
       key-store-password: ${KEYSTORE_PASSWORD:changeit}
 
-management:
-  endpoint:
-    health:
-      enabled: true
-      probes:
-        enabled: true
-
-
 application:
   port: ${OUTBOX_PORT:4444}
   keypair: ${OUTBOX_KEYPAIR:}
