@@ -8,6 +8,7 @@ import org.apache.sshd.server.auth.pubkey.PublickeyAuthenticator;
 import org.apache.sshd.server.session.ServerSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.context.annotation.Profile;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
@@ -18,7 +19,7 @@ import java.security.PublicKey;
 import java.util.Base64;
 import java.util.List;
 
-
+@Profile("!test")
 @Component
 public class OutboxAuthenticator implements PublickeyAuthenticator, PasswordAuthenticator {
     private static final Logger log = LoggerFactory.getLogger(OutboxAuthenticator.class);

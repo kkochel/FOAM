@@ -40,6 +40,13 @@ public class SftpConfig {
         sshd.setFileSystemFactory(localFileSystemFactory);
         sshd.setPasswordAuthenticator(passwordAuthenticator);
         sshd.setPublickeyAuthenticator(publicKeyAuthenticator);
+
+        // Disable SSH shell access
+        sshd.setShellFactory(null);
+
+        // Disable SSH command execution
+        sshd.setCommandFactory(null);
+
         sshd.start();
         return sshd;
     }
