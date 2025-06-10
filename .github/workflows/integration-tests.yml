@@ -33,7 +33,7 @@ jobs:
       - name: Setup K3d
         uses: nolar/setup-k3d-k3s@v1
         with:
-          version: v5.5.1
+          version: v1.33.1+k3s1
           k3d-name: foam-test-cluster
           k3d-args: --no-lb --k3s-arg --disable=traefik,servicelb,metrics-server@server:*
 
