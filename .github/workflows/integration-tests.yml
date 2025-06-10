@@ -47,7 +47,13 @@ jobs:
         run: |
           # Create namespace
           kubectl create namespace foam-test
-          
+
+          # Wait for namespace to be fully initialized
+          kubectl wait --for=jsonpath='{.status.phase}'=Active namespace/foam-test --timeout=60s
+
+          # Ensure default service account exists
+          kubectl get serviceaccount default -n foam-test || kubectl create serviceaccount default -n foam-test
+
           # Deploy PostgreSQL
           kubectl create -n foam-test -f - <<EOF
           apiVersion: apps/v1
@@ -88,7 +94,7 @@ jobs:
             - port: 5432
               targetPort: 5432
           EOF
-          
+
           # Deploy RabbitMQ
           kubectl create -n foam-test -f - <<EOF
           apiVersion: apps/v1
@@ -127,7 +133,7 @@ jobs:
               port: 15672
               targetPort: 15672
           EOF
-          
+
           # Deploy integration service
           kubectl create -n foam-test -f - <<EOF
           apiVersion: apps/v1
@@ -170,7 +176,7 @@ jobs:
             - port: 8080
               targetPort: 8080
           EOF
-          
+
           # Wait for deployments to be ready
           kubectl wait --for=condition=available --timeout=300s deployment/postgres -n foam-test
           kubectl wait --for=condition=available --timeout=300s deployment/rabbitmq -n foam-test
