@@ -10,12 +10,12 @@ import org.springframework.stereotype.Service;
 public class FoamDatasetSender {
     private static final Logger log = LoggerFactory.getLogger(FoamDatasetSender.class);
 
-    @Value("${app.foam-dataset.routing-key}")
-    private String routingKey;
+    private final String routingKey;
     private final RabbitTemplate template;
 
-    public FoamDatasetSender(RabbitTemplate template) {
+    public FoamDatasetSender(RabbitTemplate template, @Value("${app.foam-dataset.routing-key}") String routingKey) {
         this.template = template;
+        this.routingKey = routingKey;
     }
 
     public void handleSend(DatasetData data) {
