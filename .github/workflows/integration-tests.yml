@@ -39,7 +39,7 @@ jobs:
 
       - name: Build integration service image
         run: |
-          ./gradlew :integration:build
+          ./integration/gradlew build
           docker build -t ghcr.io/foam/integration:test -f integration.dockerfile .
           k3d image import ghcr.io/foam/integration:test -c foam-test-cluster
 
@@ -184,7 +184,8 @@ jobs:
 
       - name: Run integration tests
         run: |
-          ./gradlew :it-tests:test
+          cd .github/it-tests
+          ../../integration/gradlew test
 
       - name: Cleanup
         if: always()
