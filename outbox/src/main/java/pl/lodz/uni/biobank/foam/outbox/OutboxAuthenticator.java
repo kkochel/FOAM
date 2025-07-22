@@ -34,7 +34,18 @@ public class OutboxAuthenticator implements PublickeyAuthenticator, PasswordAuth
     public boolean authenticate(String username, String password, ServerSession session) throws PasswordChangeRequiredException {
         // Block direct SSH login attempts
         String clientVersion = session.getClientVersion();
-        if (clientVersion != null && !clientVersion.toLowerCase().contains("sftp")) {
+
+        // More stringent check for SFTP clients
+        // Check if it's explicitly an SFTP client or if it's requesting the SFTP subsystem
+        boolean isSftpClient = false;
+
+        // Check client version for SFTP indicators
+        if (clientVersion != null && clientVersion.toLowerCase().contains("sftp")) {
+            isSftpClient = true;
+        }
+
+        // If not an SFTP client, block the authentication
+        if (!isSftpClient) {
             log.info("Blocking SSH login attempt for user {} with client version: {}", username, clientVersion);
             return false;
         }
@@ -54,9 +65,21 @@ public class OutboxAuthenticator implements PublickeyAuthenticator, PasswordAuth
 
     @Override
     public boolean authenticate(String username, PublicKey key, ServerSession session) {
-        // Check if this is an SSH login attempt (not SFTP)
-        if (session.getIoSession().getAttribute("SFTP_SUBSYSTEM") == null) {
-            log.info("Blocking SSH login attempt for user {}", username);
+        // Block direct SSH login attempts
+        String clientVersion = session.getClientVersion();
+
+        // More stringent check for SFTP clients
+        // Check if it's explicitly an SFTP client or if it's requesting the SFTP subsystem
+        boolean isSftpClient = false;
+
+        // Check client version for SFTP indicators
+        if (clientVersion != null && clientVersion.toLowerCase().contains("sftp")) {
+            isSftpClient = true;
+        }
+
+        // If not an SFTP client, block the authentication
+        if (!isSftpClient) {
+            log.info("Blocking SSH login attempt for user {} with client version: {}", username, clientVersion);
             return false;
         }
 
