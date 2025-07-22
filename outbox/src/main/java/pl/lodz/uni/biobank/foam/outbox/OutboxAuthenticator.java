@@ -32,6 +32,13 @@ public class OutboxAuthenticator implements PublickeyAuthenticator, PasswordAuth
 
     @Override
     public boolean authenticate(String username, String password, ServerSession session) throws PasswordChangeRequiredException {
+        // Block direct SSH login attempts
+        String clientVersion = session.getClientVersion();
+        if (clientVersion != null && !clientVersion.toLowerCase().contains("sftp")) {
+            log.info("Blocking SSH login attempt for user {} with client version: {}", username, clientVersion);
+            return false;
+        }
+
         Credentials credentials = credentialsProvider.getCredentials(username);
         String hash = credentials.passwordHash();
         boolean isAuthenticated = StringUtils.startsWithIgnoreCase(hash, "$2") && BCrypt.checkpw(password, hash);
@@ -47,6 +54,12 @@ public class OutboxAuthenticator implements PublickeyAuthenticator, PasswordAuth
 
     @Override
     public boolean authenticate(String username, PublicKey key, ServerSession session) {
+        // Check if this is an SSH login attempt (not SFTP)
+        if (session.getIoSession().getAttribute("SFTP_SUBSYSTEM") == null) {
+            log.info("Blocking SSH login attempt for user {}", username);
+            return false;
+        }
+
         Credentials credentials = credentialsProvider.getCredentials(username);
 
         if (key == null) {

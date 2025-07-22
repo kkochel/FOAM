@@ -40,6 +40,7 @@ public class SftpConfig {
         sshd.setPasswordAuthenticator(passwordAuthenticator);
         sshd.setPublickeyAuthenticator(publicKeyAuthenticator);
 
+        // Disable all SSH interactive features to prevent SSH login
         sshd.setShellFactory(null);
         sshd.setCommandFactory(null);
         sshd.setAgentFactory(null);
