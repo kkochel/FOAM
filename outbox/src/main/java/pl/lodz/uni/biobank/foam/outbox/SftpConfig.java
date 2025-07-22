@@ -6,7 +6,6 @@ import org.apache.sshd.server.SshServer;
 import org.apache.sshd.server.auth.password.PasswordAuthenticator;
 import org.apache.sshd.server.auth.password.UserAuthPasswordFactory;
 import org.apache.sshd.server.auth.pubkey.PublickeyAuthenticator;
-import org.apache.sshd.server.auth.pubkey.UserAuthPublicKeyFactory;
 import org.apache.sshd.server.keyprovider.SimpleGeneratorHostKeyProvider;
 import org.apache.sshd.sftp.server.SftpEventListener;
 import org.apache.sshd.sftp.server.SftpSubsystemFactory;
@@ -33,7 +32,7 @@ public class SftpConfig {
         SshServer sshd = SshServer.setUpDefaultServer();
         sshd.setPort(outboxPort);
         sshd.setKeyPairProvider(ObjectUtils.isEmpty(outboxKeypair) ? new SimpleGeneratorHostKeyProvider() : new BouncyCastleGeneratorHostKeyProvider(new File(outboxKeypair).toPath()));
-        sshd.setUserAuthFactories(Arrays.asList(new UserAuthPasswordFactory(), new UserAuthPublicKeyFactory()));
+        sshd.setUserAuthFactories(Arrays.asList(new UserAuthPasswordFactory()));
         SftpSubsystemFactory sftpSubsystemFactory = new SftpSubsystemFactory();
         sftpSubsystemFactory.addSftpEventListener(sftpEventListener);
         sshd.setSubsystemFactories(Collections.singletonList(sftpSubsystemFactory));
@@ -41,11 +40,12 @@ public class SftpConfig {
         sshd.setPasswordAuthenticator(passwordAuthenticator);
         sshd.setPublickeyAuthenticator(publicKeyAuthenticator);
 
-        // Disable SSH shell access
         sshd.setShellFactory(null);
-
-        // Disable SSH command execution
         sshd.setCommandFactory(null);
+        sshd.setSessionHeartbeat(null, null);
+        sshd.setAgentFactory(null);
+        sshd.setForwardingFilter(null);
+
 
         sshd.start();
         return sshd;
