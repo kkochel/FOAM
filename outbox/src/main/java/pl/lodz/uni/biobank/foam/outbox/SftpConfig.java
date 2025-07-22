@@ -42,7 +42,6 @@ public class SftpConfig {
 
         sshd.setShellFactory(null);
         sshd.setCommandFactory(null);
-        sshd.setSessionHeartbeat(null, null);
         sshd.setAgentFactory(null);
         sshd.setForwardingFilter(null);
 
