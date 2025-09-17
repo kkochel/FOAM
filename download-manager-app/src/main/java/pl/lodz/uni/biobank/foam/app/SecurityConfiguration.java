@@ -35,12 +35,14 @@ public class SecurityConfiguration extends GlobalAuthenticationConfigurerAdapter
     private static final String[] WHITE_LIST_URL = {
         "/api/auth/sign-in", 
         "/api/auth/refresh-token",
-        "/api/auth/is-authenticated"
+        "/api/auth/is-authenticated",
+        "/api/auth/sign-out"
     };
 
     // Endpoints that are exempt from CSRF protection (typically for login)
     private static final String[] CSRF_EXEMPT_URL = {
-        "/api/auth/sign-in"
+        "/api/auth/sign-in",
+        "/api/auth/sign-out"
     };
 
     private final JwtFilter jwtFilter;
