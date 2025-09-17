@@ -70,8 +70,6 @@ export const AuthProvider: FC<AuthProviderProps> = (props) => {
     const {children} = props
     const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false)
 
-    console.log("AuthProvider: isAuthenticated: ", isAuthenticated)
-
     useEffect(() => {
         verifyCookie()
             .then((status) => {

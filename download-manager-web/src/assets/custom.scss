@@ -1,7 +1,7 @@
-$primary: #155177;
+@use "bootstrap/scss/bootstrap" as * with (
+  $primary: #155177
+);
 
-// Bootstrap and its default variables
-@import "node_modules/bootstrap/scss/bootstrap";
 
 html {
   @include media-breakpoint-up(xs) {

@@ -123,8 +123,6 @@ public class SecurityConfiguration extends GlobalAuthenticationConfigurerAdapter
         configuration.setAllowedMethods(Arrays.asList(
             HttpMethod.GET.name(),
             HttpMethod.POST.name(),
-            HttpMethod.PUT.name(),
-            HttpMethod.DELETE.name(),
             HttpMethod.OPTIONS.name()
         ));
 
