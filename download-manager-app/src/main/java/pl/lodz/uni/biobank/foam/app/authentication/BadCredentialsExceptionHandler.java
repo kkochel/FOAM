@@ -1,6 +1,5 @@
 package pl.lodz.uni.biobank.foam.app.authentication;
 
-import jakarta.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -18,8 +17,8 @@ public class BadCredentialsExceptionHandler extends ResponseEntityExceptionHandl
     @ExceptionHandler({BadCredentialsException.class})
     @ResponseBody
     public ResponseEntity<HttpStatus> handleAuthenticationException(Exception ex) {
-
-        log.info("SignIn failed reason {}", ex.toString());
+        // Log with full stacktrace for diagnostics
+        log.warn("Sign-in failed due to bad credentials", ex);
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
     }
 }

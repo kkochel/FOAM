@@ -26,7 +26,8 @@ const handleSignIn = (setAuthenticated: Dispatch<SetStateAction<boolean>>, navig
             return response.status
         })
         .catch(reason => {
-            return reason.response.status
+            const status = reason?.response?.status;
+            return typeof status === 'number' ? status : 0;
         })
 }
 
