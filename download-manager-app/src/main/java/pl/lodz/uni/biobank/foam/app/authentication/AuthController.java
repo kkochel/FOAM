@@ -58,25 +58,7 @@ public class AuthController {
             responseBody.put("message", "Authentication successful");
 
             return ResponseEntity.status(HttpStatus.OK).body(responseBody);
-        } catch (BadCredentialsException e) {
-            // Handle invalid credentials
-            log.debug("Sign-in failed: Bad credentials");
-
-            Map<String, String> responseBody = new HashMap<>();
-            responseBody.put("status", "error");
-            responseBody.put("message", "Invalid username or password");
-
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(responseBody);
-        } catch (LockedException e) {
-            // Handle locked accounts
-            log.debug("Sign-in failed: Account locked");
-
-            Map<String, String> responseBody = new HashMap<>();
-            responseBody.put("status", "error");
-            responseBody.put("message", "Account is locked");
-
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(responseBody);
-        } catch (AuthenticationException e) {
+        } catch (Exception e) {
             // Handle other authentication exceptions
             log.debug("Sign-in failed: {}", e.getMessage());
 
@@ -157,6 +139,16 @@ public class AuthController {
 
         log.debug("User signed out successfully");
         return ResponseEntity.status(HttpStatus.OK).body(responseBody);
+    }
+
+    @GetMapping("unexpected-error")
+    public void triggerUnexpectedError() {
+        throw new RuntimeException("Unexpected error");
+    }
+
+    @GetMapping("npe")
+    public void triggerNpe() {
+        throw new NullPointerException("NPE");
     }
 
     /**
