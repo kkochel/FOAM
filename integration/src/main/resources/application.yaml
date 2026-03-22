@@ -29,3 +29,4 @@ spring:
 app:
   foam-dataset:
     routing-key: ${FOAM_ROUTING_KEY:foam_dataset}
+    i2b2-api-url: ${I2B2_API_URL:http://10.4.4.54:8001/api/fega_connect_i2b2}
