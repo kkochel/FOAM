@@ -17,6 +17,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -38,8 +39,8 @@ class I2B2SenderTest {
     void handleSendShouldSendDataToApiWithCorrectUrl() {
         // given
         List<pl.lodz.uni.biobank.foam.shared.I2B2Integration> data = List.of(
-                new pl.lodz.uni.biobank.foam.shared.I2B2Integration("/path/to/i2b2/file1.txt", "dataset-001"),
-                new pl.lodz.uni.biobank.foam.shared.I2B2Integration("/path/to/i2b2/file2.txt", "dataset-001")
+                new pl.lodz.uni.biobank.foam.shared.I2B2Integration("/path/to/i2b2/11111.txt", "dataset-001"),
+                new pl.lodz.uni.biobank.foam.shared.I2B2Integration("/path/to/i2b2/22222.txt", "dataset-001")
         );
         when(restTemplate.postForEntity(eq(apiUrl), any(HttpEntity.class), eq(String.class)))
                 .thenReturn(ResponseEntity.ok("success"));
@@ -69,7 +70,7 @@ class I2B2SenderTest {
     void handleSendShouldPassExactDataAsCsv() {
         // given
         List<pl.lodz.uni.biobank.foam.shared.I2B2Integration> data = List.of(
-                new pl.lodz.uni.biobank.foam.shared.I2B2Integration("/submissions/i2b2/patient_data.csv", "STUDY-2024-001")
+                new pl.lodz.uni.biobank.foam.shared.I2B2Integration("/submissions/i2b2/12345.csv", "STUDY-2024-001")
         );
         ArgumentCaptor<HttpEntity<MultiValueMap<String, Object>>> captor = ArgumentCaptor.forClass(HttpEntity.class);
         when(restTemplate.postForEntity(eq(apiUrl), captor.capture(), eq(String.class)))
@@ -90,17 +91,17 @@ class I2B2SenderTest {
         String csvContent = new String(fileResource.getByteArray(), StandardCharsets.UTF_8);
 
         assertThat(csvContent).contains("i2b2_ID,fega_ID");
-        assertThat(csvContent).contains("patient_data,STUDY-2024-001");
+        assertThat(csvContent).contains("12345,STUDY-2024-001");
     }
 
     @Test
-    void handleSendShouldExtractFilenameWithoutExtension() {
+    void handleSendShouldExtractNumericFilenameWithoutExtension() {
         // given
         List<pl.lodz.uni.biobank.foam.shared.I2B2Integration> data = List.of(
-                new pl.lodz.uni.biobank.foam.shared.I2B2Integration("/path/to/file.txt", "dataset-001"),
-                new pl.lodz.uni.biobank.foam.shared.I2B2Integration("C:\\Windows\\path\\document.pdf", "dataset-002"),
-                new pl.lodz.uni.biobank.foam.shared.I2B2Integration("simple.csv", "dataset-003"),
-                new pl.lodz.uni.biobank.foam.shared.I2B2Integration("/no/extension/file", "dataset-004")
+                new pl.lodz.uni.biobank.foam.shared.I2B2Integration("/path/to/11111.txt", "dataset-001"),
+                new pl.lodz.uni.biobank.foam.shared.I2B2Integration("C:\\Windows\\path\\22222.pdf", "dataset-002"),
+                new pl.lodz.uni.biobank.foam.shared.I2B2Integration("33333.csv", "dataset-003"),
+                new pl.lodz.uni.biobank.foam.shared.I2B2Integration("/no/extension/44444", "dataset-004")
         );
         ArgumentCaptor<HttpEntity<MultiValueMap<String, Object>>> captor = ArgumentCaptor.forClass(HttpEntity.class);
         when(restTemplate.postForEntity(eq(apiUrl), captor.capture(), eq(String.class)))
@@ -113,9 +114,21 @@ class I2B2SenderTest {
         ByteArrayResource fileResource = (ByteArrayResource) captor.getValue().getBody().getFirst("file");
         String csvContent = new String(fileResource.getByteArray(), StandardCharsets.UTF_8);
 
-        assertThat(csvContent).contains("file,dataset-001");
-        assertThat(csvContent).contains("document,dataset-002");
-        assertThat(csvContent).contains("simple,dataset-003");
-        assertThat(csvContent).contains("file,dataset-004");
+        assertThat(csvContent).contains("11111,dataset-001");
+        assertThat(csvContent).contains("22222,dataset-002");
+        assertThat(csvContent).contains("33333,dataset-003");
+        assertThat(csvContent).contains("44444,dataset-004");
+    }
+
+    @Test
+    void handleSendShouldNotThrowWhenFilenameIsNotNumeric() {
+        // given
+        List<pl.lodz.uni.biobank.foam.shared.I2B2Integration> data = List.of(
+                new pl.lodz.uni.biobank.foam.shared.I2B2Integration("/submissions/i2b2/patient_data.csv", "STUDY-2024-001")
+        );
+
+        // when / then — error is logged, message is acknowledged (no exception propagated)
+        assertThatCode(() -> i2b2Sender.handleSend(data)).doesNotThrowAnyException();
+        verifyNoInteractions(restTemplate);
     }
 }

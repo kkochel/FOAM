@@ -17,7 +17,6 @@ import pl.lodz.uni.biobank.foam.shared.I2B2Integration;
 
 import java.nio.charset.StandardCharsets;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class I2B2Sender {
@@ -34,9 +33,13 @@ public class I2B2Sender {
 
     public void handleSend(List<I2B2Integration> data) {
         log.info("Starting I2B2 data send process. Number of records: {}", data.size());
-        String csvContent = convertToCsv(data);
-        sendCsvFile(csvContent);
-        log.info("I2B2 data send process completed successfully");
+        try {
+            String csvContent = convertToCsv(data);
+            sendCsvFile(csvContent);
+            log.info("I2B2 data send process completed successfully");
+        } catch (Exception e) {
+            log.error("I2B2 data send process failed. Error: {}", e.getMessage(), e);
+        }
     }
 
     private String convertToCsv(List<I2B2Integration> data) {
@@ -68,7 +71,12 @@ public class I2B2Sender {
         // Remove extension
         int lastDotIndex = filename.lastIndexOf('.');
         if (lastDotIndex > 0) {
-            return filename.substring(0, lastDotIndex);
+            filename = filename.substring(0, lastDotIndex);
+        }
+
+        if (!filename.matches("\\d+")) {
+            throw new IllegalArgumentException(
+                    "I2B2 ID must be numeric, but got: '" + filename + "' from path: " + filePath);
         }
 
         return filename;
@@ -98,7 +106,6 @@ public class I2B2Sender {
             log.debug("Response body: {}", response.getBody());
         } catch (RestClientException e) {
             log.error("Failed to send CSV file to I2B2 API at URL: {}. Error: {}", apiUrl, e.getMessage(), e);
-            throw e;
         }
     }
 }
