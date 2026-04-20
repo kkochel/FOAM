@@ -9,4 +9,6 @@ public interface DatasetRepository extends JpaRepository<Dataset, Long> {
 
     @Query("FROM Dataset d LEFT JOIN FETCH d.datasetFiles WHERE d.stableId = :stableId")
     Dataset getWithFilesBy(@Param("stableId") String stableId);
+
+    boolean existsByStableId(String stableId);
 }
