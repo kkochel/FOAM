@@ -27,12 +27,16 @@ public class DatasetService {
     }
 
     public void handleMessage(DatasetData event) {
+        if (repository.existsByStableId(event.stableId())) {
+            log.info("Dataset already exists, skipping. StableId: {}", event.stableId());
+            return;
+        }
         List<DatasetFile> filesList = event.datasetFiles().stream().map(DatasetFile::new).toList();
         Dataset dataset = new Dataset(event);
         filesList.forEach(dataset::addFile);
 
         repository.save(dataset);
-        log.info("Dataset event processed correctly. StableId: {} ", event.stableId());
+        log.info("Dataset event processed correctly. StableId: {}", event.stableId());
     }
 
 
