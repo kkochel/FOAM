@@ -11,3 +11,5 @@ databaseChangeLog:
       file: db/changelog/add_filename_column.sql
   - include:
       file: db/changelog/inbox.sql
+  - include:
+      file: db/changelog/inbox_allow_duplicates.sql

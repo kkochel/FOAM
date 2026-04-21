@@ -23,12 +23,12 @@ public class InboxService {
 
     @Transactional(propagation = Propagation.REQUIRES_NEW)
     public boolean isDuplicate(String messageId, String queueName, String payload) {
-        if (repository.existsByMessageIdAndQueueName(messageId, queueName)) {
-            log.info("Duplicate message skipped. messageId={}, queue={}", messageId, queueName);
-            return true;
+        boolean duplicate = repository.existsByMessageIdAndQueueName(messageId, queueName);
+        if (duplicate) {
+            log.info("Duplicate message received. messageId={}, queue={}", messageId, queueName);
         }
-        repository.save(new InboxMessage(messageId, queueName, payload));
-        return false;
+        repository.save(new InboxMessage(messageId, queueName, payload, duplicate));
+        return duplicate;
     }
 
     public static String messageId(Message message) {
