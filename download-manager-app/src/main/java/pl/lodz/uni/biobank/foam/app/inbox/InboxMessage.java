@@ -27,14 +27,18 @@ public class InboxMessage {
     @Column(name = "received_at", nullable = false)
     private LocalDateTime receivedAt;
 
+    @Column(name = "duplicate", nullable = false)
+    private boolean duplicate;
+
     protected InboxMessage() {
     }
 
-    public InboxMessage(String messageId, String queueName, String payload) {
+    public InboxMessage(String messageId, String queueName, String payload, boolean duplicate) {
         this.messageId = messageId;
         this.queueName = queueName;
         this.payload = payload;
         this.receivedAt = LocalDateTime.now();
+        this.duplicate = duplicate;
     }
 
     public Long getId() {
