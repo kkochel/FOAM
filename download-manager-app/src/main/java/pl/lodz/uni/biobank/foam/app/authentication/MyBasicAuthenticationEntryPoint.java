@@ -16,11 +16,16 @@ import java.util.Optional;
 public class MyBasicAuthenticationEntryPoint implements AuthenticationEntryPoint {
     @Override
     public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException) throws IOException, ServletException {
-            Optional<Cookie> refreshTokenCookie = Arrays.stream(request.getCookies()).filter(c -> c.getName().equals("refreshToken")).findAny();
-            Optional<Cookie> tokenCookie = Arrays.stream(request.getCookies()).filter(c -> c.getName().equals("token")).findAny();
+        if (request.getCookies() == null || request.getCookies().length == 0) {
+            response.sendError(HttpServletResponse.SC_PRECONDITION_FAILED);
+            return;
+        }
 
-            if (tokenCookie.isEmpty() && refreshTokenCookie.isPresent()) {
-                response.sendError(HttpServletResponse.SC_PRECONDITION_FAILED);
-            }
+        Optional<Cookie> refreshTokenCookie = Arrays.stream(request.getCookies()).filter(c -> c.getName().equals("refreshToken")).findAny();
+        Optional<Cookie> tokenCookie = Arrays.stream(request.getCookies()).filter(c -> c.getName().equals("token")).findAny();
+
+        if (tokenCookie.isEmpty() && refreshTokenCookie.isPresent()) {
+            response.sendError(HttpServletResponse.SC_PRECONDITION_FAILED);
+        }
     }
 }

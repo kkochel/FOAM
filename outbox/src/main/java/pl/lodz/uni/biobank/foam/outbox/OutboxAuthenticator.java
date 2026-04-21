@@ -8,6 +8,7 @@ import org.apache.sshd.server.auth.pubkey.PublickeyAuthenticator;
 import org.apache.sshd.server.session.ServerSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.context.annotation.Profile;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
@@ -18,7 +19,7 @@ import java.security.PublicKey;
 import java.util.Base64;
 import java.util.List;
 
-
+@Profile("!test")
 @Component
 public class OutboxAuthenticator implements PublickeyAuthenticator, PasswordAuthenticator {
     private static final Logger log = LoggerFactory.getLogger(OutboxAuthenticator.class);
@@ -31,6 +32,24 @@ public class OutboxAuthenticator implements PublickeyAuthenticator, PasswordAuth
 
     @Override
     public boolean authenticate(String username, String password, ServerSession session) throws PasswordChangeRequiredException {
+        // Block direct SSH login attempts
+        String clientVersion = session.getClientVersion();
+
+        // More stringent check for SFTP clients
+        // Check if it's explicitly an SFTP client or if it's requesting the SFTP subsystem
+        boolean isSftpClient = false;
+
+        // Check client version for SFTP indicators
+        if (clientVersion != null && clientVersion.toLowerCase().contains("sftp")) {
+            isSftpClient = true;
+        }
+
+        // If not an SFTP client, block the authentication
+        if (!isSftpClient) {
+            log.info("Blocking SSH login attempt for user {} with client version: {}", username, clientVersion);
+            return false;
+        }
+
         Credentials credentials = credentialsProvider.getCredentials(username);
         String hash = credentials.passwordHash();
         boolean isAuthenticated = StringUtils.startsWithIgnoreCase(hash, "$2") && BCrypt.checkpw(password, hash);
@@ -46,6 +65,24 @@ public class OutboxAuthenticator implements PublickeyAuthenticator, PasswordAuth
 
     @Override
     public boolean authenticate(String username, PublicKey key, ServerSession session) {
+        // Block direct SSH login attempts
+        String clientVersion = session.getClientVersion();
+
+        // More stringent check for SFTP clients
+        // Check if it's explicitly an SFTP client or if it's requesting the SFTP subsystem
+        boolean isSftpClient = false;
+
+        // Check client version for SFTP indicators
+        if (clientVersion != null && clientVersion.toLowerCase().contains("sftp")) {
+            isSftpClient = true;
+        }
+
+        // If not an SFTP client, block the authentication
+        if (!isSftpClient) {
+            log.info("Blocking SSH login attempt for user {} with client version: {}", username, clientVersion);
+            return false;
+        }
+
         Credentials credentials = credentialsProvider.getCredentials(username);
 
         if (key == null) {

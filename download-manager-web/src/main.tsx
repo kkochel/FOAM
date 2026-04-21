@@ -30,20 +30,22 @@ export const axiosClient = axios.create({
 
 
 const refreshAccessToken = () => {
-    axiosClient.post("/api/auth/refresh-token", {})
+    return axiosClient.post("/api/auth/refresh-token", {});
 }
 
 axiosClient.interceptors.response.use(async (response) => {
     return response
 }, function (error) {
     const originalConfig = error.config;
+    const status = error?.response?.status;
 
-    if (error.response.status === 412) {
-        refreshAccessToken();
-        return axiosClient(originalConfig);
+    if (status === 412) {
+        return refreshAccessToken()
+            .then(() => originalConfig ? axiosClient(originalConfig) : Promise.reject(error))
+            .catch(() => Promise.reject(error));
     }
 
-    if (error.response.status === 403) {
+    if (status === 403) {
         window.location.href = '/sign-in';
     }
 

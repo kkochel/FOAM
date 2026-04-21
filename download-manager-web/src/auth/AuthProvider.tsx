@@ -26,7 +26,8 @@ const handleSignIn = (setAuthenticated: Dispatch<SetStateAction<boolean>>, navig
             return response.status
         })
         .catch(reason => {
-            return reason.response.status
+            const status = reason?.response?.status;
+            return typeof status === 'number' ? status : 0;
         })
 }
 
@@ -69,8 +70,6 @@ const checkCookie = async (): Promise<number> => {
 export const AuthProvider: FC<AuthProviderProps> = (props) => {
     const {children} = props
     const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false)
-
-    console.log("AuthProvider: isAuthenticated: ", isAuthenticated)
 
     useEffect(() => {
         verifyCookie()

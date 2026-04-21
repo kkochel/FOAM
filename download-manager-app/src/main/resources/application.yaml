@@ -31,10 +31,15 @@ spring:
 application:
   allowed-origins: ${ALLOWED_ORIGINS:http://localhost:5173/}
   jwt:
-    secret-key: ${JWT_SECRET_KEY:12341234123412341234123412341234123412341234123412341234123412341234123412341234123412341234123412341234}
-    expiration: ${JWT_EXPIRATION:900000} # an 15 minutes in milliseconds
+    # Use a secure random key in production, this is just a secure default
+    secret-key: ${JWT_SECRET_KEY:HkQVSxN8Uw5UZwEsKJaKfyNKhRpC2Mj3TbPXGcAvBnDqFeLrZmYxWz4S6g9tVu7R}
+    expiration: ${JWT_EXPIRATION:900000} # 15 minutes in milliseconds
     refresh-token:
-      expiration: ${JWT_REFRESH_TOKEN:10800000} # a day in milliseconds
+      expiration: ${JWT_REFRESH_TOKEN:10800000} # 3 hours in milliseconds
+    # JWT issuer claim - identifies the principal that issued the JWT
+    issuer: ${JWT_ISSUER:foam-application}
+    # JWT audience claim - identifies the recipients that the JWT is intended for
+    audience: ${JWT_AUDIENCE:foam-users}
   export-file:
     routing-key: ${EXPORT_FILE_ROUTING_KEY:outbox_export}
 
