@@ -1,8 +1,7 @@
 package pl.lodz.uni.biobank.foam.c4ghfs
 
-
-import no.uio.ifi.crypt4gh.stream.Crypt4GHInputStream
-import no.uio.ifi.crypt4gh.util.KeyUtils
+import no.elixir.crypt4gh.stream.Crypt4GHInputStream
+import no.elixir.crypt4gh.util.KeyUtils
 import org.springframework.util.FileSystemUtils
 import org.testcontainers.shaded.org.apache.commons.io.FileUtils
 import spock.lang.Specification

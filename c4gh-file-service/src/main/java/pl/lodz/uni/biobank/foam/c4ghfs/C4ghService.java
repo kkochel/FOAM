@@ -1,7 +1,7 @@
 package pl.lodz.uni.biobank.foam.c4ghfs;
 
-import no.uio.ifi.crypt4gh.util.Crypt4GHUtils;
-import no.uio.ifi.crypt4gh.util.KeyUtils;
+import no.elixir.crypt4gh.util.Crypt4GHUtils;
+import no.elixir.crypt4gh.util.KeyUtils;
 import org.apache.commons.codec.DecoderException;
 import org.apache.commons.codec.binary.Hex;
 import org.slf4j.Logger;

@@ -1,13 +1,17 @@
 package pl.lodz.uni.biobank.foam.c4ghfs;
 
 import io.minio.MinioClient;
+import no.elixir.crypt4gh.util.KeyUtils;
 import org.springframework.amqp.rabbit.annotation.EnableRabbit;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.amqp.support.converter.Jackson2JsonMessageConverter;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.ApplicationRunner;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+
+import java.io.File;
 
 @Configuration
 @EnableRabbit
@@ -70,6 +74,23 @@ public class AppConfiguration {
     @Bean
     public ExportStageSender stageSender (RabbitTemplate template) {
         return new ExportStageSender(template);
+    }
+
+    @Bean
+    public ApplicationRunner privateKeyValidator() {
+        return args -> {
+            File keyFile = new File(crypt4ghPrivateKeyPath);
+            if (!keyFile.exists() || !keyFile.canRead()) {
+                throw new IllegalStateException(
+                        "Crypt4GH private key is not accessible at path: " + crypt4ghPrivateKeyPath);
+            }
+            try {
+                KeyUtils.getInstance().readPrivateKey(keyFile, crypt4ghPrivateKeyPassword.toCharArray());
+            } catch (Exception e) {
+                throw new IllegalStateException(
+                        "Crypt4GH private key password is invalid for key at: " + crypt4ghPrivateKeyPath, e);
+            }
+        };
     }
 
 }

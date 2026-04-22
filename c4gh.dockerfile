@@ -1,11 +1,5 @@
 FROM gradle:8.10.2-jdk21-alpine as builder
 
-ARG FOAM_USER
-ARG FOAM_TOKEN
-
-ENV FOAM_USER ${FOAM_USER}
-ENV FOAM_TOKEN ${FOAM_TOKEN}
-
 COPY c4gh-file-service/gradle /app/c4gh-file-service/
 COPY c4gh-file-service/build.gradle /app/c4gh-file-service/
 COPY c4gh-file-service/gradlew /app/c4gh-file-service/
