@@ -30,13 +30,12 @@ public class CegaCredentialsProvider {
         this.restTemplate = restTemplate;
     }
 
-    @Cacheable("cega-credentials")
     public Credentials getCredentials(String username) {
         ResponseEntity<Credentials> response = getCredentialsResponseEntity(getUrl(username), getHeaders());
         HttpStatus statusCode = (HttpStatus) response.getStatusCode();
+
         if (!HttpStatus.OK.equals(statusCode)) {
             log.error("Bad response from CentralEGA: {}, {}", statusCode.value(), statusCode.getReasonPhrase());
-            throw new RestClientException(String.format("Bad response from CentralEGA: %s, %s", statusCode.value(), statusCode.getReasonPhrase()));
         }
 
         log.info("Correctly returned permissions for the user {}", username);
