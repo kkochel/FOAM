@@ -1,0 +1,194 @@
+name: Integration Tests
+
+on:
+  push:
+    branches: [ main, master, integration-tests ]
+    paths:
+      - 'integration/**'
+      - 'it-tests/**'
+      - '.github/workflows/integration-tests.yml'
+  pull_request:
+    branches: [ main, master, integration-tests ]
+    paths:
+      - 'integration/**'
+      - 'it-tests/**'
+      - '.github/workflows/integration-tests.yml'
+  workflow_dispatch:
+
+jobs:
+  integration-tests:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Set up JDK 21
+        uses: actions/setup-java@v3
+        with:
+          java-version: '21'
+          distribution: 'temurin'
+          cache: gradle
+
+      - name: Setup K3d
+        uses: nolar/setup-k3d-k3s@v1
+        with:
+          version: v1.33.1+k3s1
+          k3d-name: foam-test-cluster
+          k3d-args: --no-lb --k3s-arg --disable=traefik,servicelb,metrics-server@server:*
+
+      - name: Build integration service image
+        run: |
+          ./integration/gradlew build
+          docker build -t ghcr.io/foam/integration:test -f integration.dockerfile .
+          k3d image import ghcr.io/foam/integration:test -c foam-test-cluster
+
+      - name: Deploy test resources to K3d
+        run: |
+          # Create namespace
+          kubectl create namespace foam-test
+
+          # Wait for namespace to be fully initialized
+          kubectl wait --for=jsonpath='{.status.phase}'=Active namespace/foam-test --timeout=60s
+
+          # Ensure default service account exists
+          kubectl get serviceaccount default -n foam-test || kubectl create serviceaccount default -n foam-test
+
+          # Deploy PostgreSQL
+          kubectl create -n foam-test -f - <<EOF
+          apiVersion: apps/v1
+          kind: Deployment
+          metadata:
+            name: postgres
+          spec:
+            replicas: 1
+            selector:
+              matchLabels:
+                app: postgres
+            template:
+              metadata:
+                labels:
+                  app: postgres
+              spec:
+                containers:
+                - name: postgres
+                  image: postgres:15.2
+                  env:
+                  - name: POSTGRES_PASSWORD
+                    value: biobank
+                  - name: POSTGRES_USER
+                    value: biobank
+                  - name: POSTGRES_DB
+                    value: foam
+                  ports:
+                  - containerPort: 5432
+          ---
+          apiVersion: v1
+          kind: Service
+          metadata:
+            name: postgres
+          spec:
+            selector:
+              app: postgres
+            ports:
+            - port: 5432
+              targetPort: 5432
+          EOF
+
+          # Deploy RabbitMQ
+          kubectl create -n foam-test -f - <<EOF
+          apiVersion: apps/v1
+          kind: Deployment
+          metadata:
+            name: rabbitmq
+          spec:
+            replicas: 1
+            selector:
+              matchLabels:
+                app: rabbitmq
+            template:
+              metadata:
+                labels:
+                  app: rabbitmq
+              spec:
+                containers:
+                - name: rabbitmq
+                  image: rabbitmq:3-management-alpine
+                  ports:
+                  - containerPort: 5672
+                  - containerPort: 15672
+          ---
+          apiVersion: v1
+          kind: Service
+          metadata:
+            name: rabbitmq
+          spec:
+            selector:
+              app: rabbitmq
+            ports:
+            - name: amqp
+              port: 5672
+              targetPort: 5672
+            - name: management
+              port: 15672
+              targetPort: 15672
+          EOF
+
+          # Deploy integration service
+          kubectl create -n foam-test -f - <<EOF
+          apiVersion: apps/v1
+          kind: Deployment
+          metadata:
+            name: integration
+          spec:
+            replicas: 1
+            selector:
+              matchLabels:
+                app: integration
+            template:
+              metadata:
+                labels:
+                  app: integration
+              spec:
+                containers:
+                - name: integration
+                  image: ghcr.io/foam/integration:test
+                  env:
+                  - name: SPRING_DATASOURCE_URL
+                    value: jdbc:postgresql://postgres:5432/foam
+                  - name: SPRING_DATASOURCE_USERNAME
+                    value: biobank
+                  - name: SPRING_DATASOURCE_PASSWORD
+                    value: biobank
+                  - name: SPRING_RABBITMQ_HOST
+                    value: rabbitmq
+                  - name: APP_FOAM_DATASET_ROUTING_KEY
+                    value: foam.dataset
+          ---
+          apiVersion: v1
+          kind: Service
+          metadata:
+            name: integration
+          spec:
+            selector:
+              app: integration
+            ports:
+            - port: 8080
+              targetPort: 8080
+          EOF
+
+          # Wait for deployments to be ready
+          kubectl wait --for=condition=available --timeout=300s deployment/postgres -n foam-test
+          kubectl wait --for=condition=available --timeout=300s deployment/rabbitmq -n foam-test
+          kubectl wait --for=condition=available --timeout=300s deployment/integration -n foam-test
+
+      - name: Run integration tests
+        run: |
+          cd .github/it-tests
+          ../../integration/gradlew test
+
+      - name: Cleanup
+        if: always()
+        run: |
+          kubectl delete namespace foam-test
+          k3d cluster delete foam-test-cluster
