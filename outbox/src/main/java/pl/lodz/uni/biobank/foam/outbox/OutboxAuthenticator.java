@@ -31,6 +31,7 @@ public class OutboxAuthenticator implements PublickeyAuthenticator, PasswordAuth
 
     @Override
     public boolean authenticate(String username, String password, ServerSession session) throws PasswordChangeRequiredException {
+        log.info("Authenticating user {}", username);
         Credentials credentials = credentialsProvider.getCredentials(username);
         String hash = credentials.passwordHash();
         boolean isAuthenticated = StringUtils.startsWithIgnoreCase(hash, "$2") && BCrypt.checkpw(password, hash);

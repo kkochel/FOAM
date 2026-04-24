@@ -30,13 +30,13 @@ public class CegaCredentialsProvider {
         this.restTemplate = restTemplate;
     }
 
-    @Cacheable("cega-credentials")
     public Credentials getCredentials(String username) {
+        log.info("Getting credentials for {}", username);
         ResponseEntity<Credentials> response = getCredentialsResponseEntity(getUrl(username), getHeaders());
         HttpStatus statusCode = (HttpStatus) response.getStatusCode();
+
         if (!HttpStatus.OK.equals(statusCode)) {
             log.error("Bad response from CentralEGA: {}, {}", statusCode.value(), statusCode.getReasonPhrase());
-            throw new RestClientException(String.format("Bad response from CentralEGA: %s, %s", statusCode.value(), statusCode.getReasonPhrase()));
         }
 
         log.info("Correctly returned permissions for the user {}", username);
@@ -60,6 +60,7 @@ public class CegaCredentialsProvider {
 
     private ResponseEntity<Credentials> getCredentialsResponseEntity(URL url, HttpHeaders headers) {
         try {
+            log.info("Call external service for getting credentials for {}", url.toString());
             return restTemplate.exchange(url.toURI(), HttpMethod.GET, new HttpEntity<>(headers), Credentials.class);
         } catch (URISyntaxException e) {
             log.error("Error during query execution: {}", url.getPath());
