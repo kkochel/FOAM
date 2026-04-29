@@ -39,8 +39,8 @@ class I2B2SenderTest {
     void handleSendShouldSendDataToApiWithCorrectUrl() {
         // given
         List<pl.lodz.uni.biobank.foam.shared.I2B2Integration> data = List.of(
-                new pl.lodz.uni.biobank.foam.shared.I2B2Integration("/path/to/i2b2/11111.txt", "dataset-001"),
-                new pl.lodz.uni.biobank.foam.shared.I2B2Integration("/path/to/i2b2/22222.txt", "dataset-001")
+                new pl.lodz.uni.biobank.foam.shared.I2B2Integration("/path/to/i2b2/11111.txt.c4gh", "dataset-001"),
+                new pl.lodz.uni.biobank.foam.shared.I2B2Integration("/path/to/i2b2/22222.txt.c4gh", "dataset-001")
         );
         when(restTemplate.postForEntity(eq(apiUrl), any(HttpEntity.class), eq(String.class)))
                 .thenReturn(ResponseEntity.ok("success"));

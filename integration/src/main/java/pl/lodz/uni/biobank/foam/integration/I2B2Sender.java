@@ -69,7 +69,7 @@ public class I2B2Sender {
         filename = filename.substring(filename.lastIndexOf('\\') + 1);
 
         // Remove extension
-        int lastDotIndex = filename.lastIndexOf('.');
+        int lastDotIndex = filename.indexOf('.');
         if (lastDotIndex > 0) {
             filename = filename.substring(0, lastDotIndex);
         }
