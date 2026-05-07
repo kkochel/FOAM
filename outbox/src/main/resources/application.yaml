@@ -1,4 +1,14 @@
 spring:
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+  datasource:
+    url: ${DB_URL:jdbc:postgresql://172.16.232.2:5432/foam}
+    password: ${DB_PASSWORD:biobank}
+    username: ${DB_USERNAME:biobank}
   rabbitmq:
     host: ${BROKER_HOST:172.16.239.4}
     port: ${BROKER_PORT:5671}
